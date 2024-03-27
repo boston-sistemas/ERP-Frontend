@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Verifica que este sea el módulo correcto según la versión de Next.js que estés utilizando.
+import { useRouter } from 'next/navigation'; 
 import { FormSubmitEvent } from '../../../types/component-types';
 import Banner from '../../../components/banner';
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false); // Estado de mostrar contraseña
+  const [showPassword, setShowPassword] = useState(false); 
   const router = useRouter();
 
   const handleSubmit = (event: FormSubmitEvent) => {

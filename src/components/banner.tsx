@@ -1,8 +1,10 @@
 import Image from 'next/image';
+import { useTheme } from '@mui/material/styles';
 
 const Banner = () => {
+  const theme = useTheme();
   return (
-    <div className="w-full py-4 bg-blue-600 flex justify-between items-center" style={{ backgroundColor: '#1A266A' }}>
+    <div className="w-full flex justify-between items-center" style={{ ...theme.mixins.toolbar, backgroundColor: '#1A266A' }}>
       <div className="pl-4">
         <Image src="/logoMecsa.png" alt="Logo Mecsa" width={100} height={50} />
       </div>

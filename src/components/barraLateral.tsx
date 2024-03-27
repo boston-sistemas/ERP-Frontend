@@ -19,6 +19,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import Banner from './banner';
 
 const drawerWidth = 240;
 
@@ -48,6 +49,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
+  
   ...theme.mixins.toolbar,
 }));
 
@@ -57,6 +59,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
+    marginRight: -30, // Asegúrate de que no haya margen a la derecha
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
@@ -77,7 +80,7 @@ export default function MiniDrawer() {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', p: 0, m: 0 }}>
       <CssBaseline />
       <IconButton
         color="inherit"
@@ -85,7 +88,7 @@ export default function MiniDrawer() {
         onClick={handleDrawerToggle}
         edge="start"
         sx={{
-          marginRight: 5,
+          marginRight: 0,
         }}
       >
         {open ? <ChevronLeftIcon /> : <MenuIcon />}
@@ -121,32 +124,11 @@ export default function MiniDrawer() {
             </ListItem>
           ))}
         </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        <Divider />     
       </Drawer>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <Banner />
+      </Box>
     </Box>
   );
 }
