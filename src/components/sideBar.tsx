@@ -85,12 +85,12 @@ export default function Sidebard() {
     <CssBaseline />
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
-        {/* Texto "HOLA" solo aparece cuando sidebar está expandido */}
-        {open && (
-          <Typography variant="h6" noWrap component="div">
+        {/* Contenedor para el texto "HOLA" que ocupa todo el espacio disponible */}
+        <div style={{ flexGrow: 1, display: open ? 'block' : 'none' }}>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1}}>
             HOLA
           </Typography>
-        )}
+        </div>
         <IconButton onClick={handleDrawerToggle}>
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
