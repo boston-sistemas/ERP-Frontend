@@ -1,7 +1,7 @@
 export default function Dashboard() {
     return (
       <div>
-        <h1>Pagina de NOT FOUND POR CONSTRUIR</h1>
+        <h1>🧰🛠️Seguimos Trabajando en el Modulo 1⚙️🔧...</h1>
       </div>
     );
   }
