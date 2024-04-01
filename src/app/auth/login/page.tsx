@@ -1,13 +1,20 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import { FormSubmitEvent } from '../../../types/component-types';
-import Banner from '../../../components/banner';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LanguageIcon from '@mui/icons-material/Language';
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleSubmit = (event: FormSubmitEvent) => {
@@ -21,56 +28,84 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <Banner/>
-      {/* Contenedor principal para las tarjetas */}
-      <div className="flex-grow flex items-center justify-center px-4">
-        <div className="flex space-x-4 max-w-4xl w-full">
-          {/* Tarjeta de login*/}
-          <div className="flex flex-col w-full md:w-1/2 bg-white p-8 rounded-3xl shadow-3xl">
-            <div className="flex flex-col items-center">
-              <Image src="/userSVG.svg" alt='User' width={160} height={96} />
-              <h2 className="text-2xl font-bold text-black mt-4">¡BIENVENIDO!</h2>
-              <p className="text-black mb-8">Ingrese su usuario para ingresar al portal</p>
-              <form onSubmit={handleSubmit} className="w-full">
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    id="username"
-                    placeholder="usuario"
-                    required
-                    className="mt-1 p-2 w-full border border-gray-300 rounded text-black"
-                  />
-                </div>
-                <div className="mb-4 relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    placeholder="contraseña"
-                    required
-                    className="p-2 w-full border border-gray-300 rounded text-black"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-sm text-gray-600 bg-transparent"
-                    onClick={toggleShowPassword}
-                  >
-                    {showPassword ? 'Ocultar' : 'Mostrar'}
-                  </button>
-                </div>
-                <button
-                  type="submit"
-                  className="mt-2 w-full bg-black text-white py-2 rounded-full hover:bg-blue-800"
-                >
-                  Ingresar
-                </button>
-              </form>
-            </div>
-          </div>
+    <div className="flex flex-wrap min-h-screen">
+      {/* Parte izquierda con centrado vertical y horizontal */}
+      <div className="md:w-1/2 w-full bg-blue-900 p-4 md:order-1 flex items-center justify-center">
+        <div className="flex flex-col items-start max-w-md">
+          {/* Logo */}
+          <Image 
+            src="/logoBoston.png" 
+            alt="Logo de Boston"
+            width={150} 
+            height={150} 
+          />
+          <p className="text-white mt-4 text-xl">
+            UN <span className="font-bold">PRODUCTO</span> ORIGINAL <br /><span className="font-bold">DEJA</span> <span className="font-bold">HUELLA</span>
+          </p>
+          {/* ... otros elementos ... */}
+        </div>
+      </div>
+      
 
-          {/* Tarjeta de bienvenida - Se oculta en pantallas pequeñas */}
-          <div className="hidden md:flex md:w-1/2 bg-white p-6 rounded-3xl shadow-3xl justify-center items-center" style={{ backgroundColor: '#1A266A' }}>
-            <Image src="/bostonSticker.jpg" alt="Boston Sticker" width={428} height={428} />
+      {/* Parte derecha */}
+      <div className="flex flex-col justify-center items-center w-full bg-white p-4 md:w-1/2 md:order-2">
+        <div className="w-full max-w-md px-2 sm:px-6">
+          <div className="flex flex-col items-center">
+
+            <form onSubmit={handleSubmit} className="w-full">
+              <TextField
+                type="text"
+                id="username"
+                label="Usuario"
+                variant="standard"
+                margin="normal"
+                fullWidth
+              />
+              <TextField
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                label="Contraseña"
+                variant="standard"
+                margin="normal"
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={toggleShowPassword}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <button
+                type="submit"
+                className="mt-4 w-full bg-red-600 text-white py-2 rounded hover:bg-red-500 transition duration-300 ease-in-out"
+              >
+                Ingresar
+              </button>
+              {/* Íconos de redes sociales */}
+              <div className="flex justify-around mt-4">
+                <a href="https://www.instagram.com/bostonropainterior/" target="_blank" rel="noopener noreferrer">
+                  <IconButton aria-label="Instagram" color="primary">
+                    <InstagramIcon />
+                  </IconButton>
+                </a>
+                <a href="https://www.facebook.com/BostonOficial/" target="_blank" rel="noopener noreferrer">
+                  <IconButton aria-label="Facebook" color="primary">
+                    <FacebookIcon />
+                  </IconButton>
+                </a>
+                <a href="https://www.boston.com.pe/" target="_blank" rel="noopener noreferrer">
+                  <IconButton aria-label="Web page" color="primary">
+                    <LanguageIcon />
+                  </IconButton>
+                </a>
+              </div>
+            </form>
           </div>
         </div>
       </div>
