@@ -10,7 +10,6 @@ import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
@@ -20,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Image from 'next/image';
-import { Typography } from '@mui/material';
+
 
 const drawerWidth = 240;
 
@@ -50,7 +49,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
-  
+  position: 'relative',
   ...theme.mixins.toolbar,
 }));
 
@@ -60,7 +59,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
-    marginRight: -30, // Asegúrate de que no haya margen a la derecha
+    marginRight: -30,
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
@@ -82,19 +81,36 @@ export default function Sidebard() {
 
   return (
     <Box sx={{ display: 'flex', p: 0, m: 0 }}>
-    <CssBaseline />
-    <Drawer variant="permanent" open={open}>
-      <DrawerHeader>
-        {/* Contenedor para el texto "HOLA" que ocupa todo el espacio disponible */}
-        <div style={{ flexGrow: 1, display: open ? 'block' : 'none' }}>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1}}>
-            HOLA
-          </Typography>
-        </div>
-        <IconButton onClick={handleDrawerToggle}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
-      </DrawerHeader>
+      <CssBaseline />
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-start', 
+            alignItems: 'center',
+            width: '100%', 
+            overflow: 'hidden',
+          }}>
+            {/* Ajusta el margen izquierdo de la imagen basado en si el sidebar está abierto o cerrado */}
+            <div style={{
+              marginLeft: open ? 0 : 7, // Ajusta este valor para controlar cuánto de la imagen se muestra
+              transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+            }}>
+              <Image
+                src="/logoBostonAzul.svg"
+                alt="Logo Boston"
+                width={180} 
+                height={50} 
+              />
+            </div>
+          </div>
+          <IconButton onClick={handleDrawerToggle}>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </DrawerHeader>
         <Divider />
         <List>
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -120,7 +136,7 @@ export default function Sidebard() {
             </ListItem>
           ))}
         </List>
-        <Divider />     
+        <Divider />
       </Drawer>
     </Box>
   );
