@@ -20,7 +20,7 @@ export default function Login() {
   const handleSubmit = (event: FormSubmitEvent) => {
     event.preventDefault();
     console.log('Inicio de sesión solicitado');
-    router.push('/menu/panel');
+    router.push('/panel');
   };
 
   const toggleShowPassword = () => {
@@ -30,6 +30,7 @@ export default function Login() {
   return (
     <div className="flex flex-wrap min-h-screen">
       {/* Parte izquierda con centrado vertical y horizontal */}
+      
       <div className="md:w-1/2 w-full bg-blue-900 p-4 md:order-1 flex items-center justify-center">
         <div className="flex flex-col items-start max-w-md">
           {/* Logo */}
@@ -42,9 +43,12 @@ export default function Login() {
           <p className="text-white mt-4 text-xl">
             UN <span className="font-bold">PRODUCTO</span> ORIGINAL <br /><span className="font-bold">DEJA</span> <span className="font-bold">HUELLA</span>
           </p>
-          {/* ... otros elementos ... */}
+          
         </div>
+        
       </div>
+
+      
       
 
       {/* Parte derecha */}
@@ -87,6 +91,7 @@ export default function Login() {
               >
                 Ingresar
               </button>
+
               {/* Íconos de redes sociales */}
               <div className="flex justify-around mt-4">
                 <a href="https://www.instagram.com/bostonropainterior/" target="_blank" rel="noopener noreferrer">

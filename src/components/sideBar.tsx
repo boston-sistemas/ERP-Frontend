@@ -21,7 +21,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import TimerIcon from '@mui/icons-material/Timer';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import { Factory } from '@mui/icons-material';
-
+import Link from 'next/link';
+import { SidebardProps } from '../types/component-types';
 
 const drawerWidth = 255;
 
@@ -32,7 +33,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
-});
+})
 
 const closedMixin = (theme: Theme): CSSObject => ({
   transition: theme.transitions.create('width', {
@@ -74,13 +75,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function Sidebard() {
+export default function Sidebard({open,setOpen,activePage}: SidebardProps) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
+
+  const menuItems = [
+    { text: 'Panel', icon: <HomeIcon />, href: '/panel' },
+    { text: 'Resumen', icon: <Factory />, href: '/resumen_operaciones' },
+    { text: 'Revisión de Stock', icon: <ArchiveIcon />, href: '/revision_stock' },
+    { text: 'Programación EPT', icon: <TimerIcon />, href: '/programacion_ept' },
+  ];
 
   return (
     <Box sx={{ display: 'flex', p: 0, m: 0 }}>
@@ -94,13 +100,11 @@ export default function Sidebard() {
             width: '100%', 
             overflow: 'hidden',
           }}>
-            {/* Ajusta el margen izquierdo de la imagen basado en si el sidebar está abierto o cerrado */}
             <div style={{
-              marginLeft: open ? 0 : 7, // Ajusta este valor para controlar cuánto de la imagen se muestra
+              marginLeft: open ? 0 : 7,
               transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
-                
               }),
             }}>
               <Image
@@ -117,30 +121,31 @@ export default function Sidebard() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Panel', 'Resumen', 'Revisión de Stock', 'Programación EPT'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+          {menuItems.map((item, index) => (
+            <Link key={item.text} href={item.href} passHref>
+               <ListItem disablePadding sx={{ display: 'block', backgroundColor: activePage === item.href ? 'rgb(20, 67, 131)' : 'inherit' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    color: activePage === item.href ? 'white' : 'inherit', // Cambia el color del texto a blanco si el botón está activo
+                    '&:hover': {
+                      backgroundColor: activePage === item.href ? 'grey' : 'rgba(0, 0, 0, 0.04)', // Cambia el color de fondo al azul si el botón está activo
+                    },
                   }}
                 >
-                  {index === 0 && <HomeIcon />}
-                  {index === 1 && <Factory />}
-                  {index === 2 && <ArchiveIcon />}
-                  {index === 3 && <TimerIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                      color: activePage === item.href ? 'white' : 'inherit',
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           ))}
         </List>
         <Divider />
