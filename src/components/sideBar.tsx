@@ -16,12 +16,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import Image from 'next/image';
+import HomeIcon from '@mui/icons-material/Home';
+import TimerIcon from '@mui/icons-material/Timer';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import { Factory } from '@mui/icons-material';
 
 
-const drawerWidth = 240;
+const drawerWidth = 255;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -45,6 +47,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
+  height: '64px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -97,6 +100,7 @@ export default function Sidebard() {
               transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
+                
               }),
             }}>
               <Image
@@ -113,7 +117,7 @@ export default function Sidebard() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {['Panel', 'Resumen', 'Revisión de Stock', 'Programación EPT'].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -129,7 +133,10 @@ export default function Sidebard() {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {index === 0 && <HomeIcon />}
+                  {index === 1 && <Factory />}
+                  {index === 2 && <ArchiveIcon />}
+                  {index === 3 && <TimerIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
