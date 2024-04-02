@@ -31,3 +31,11 @@ body {
     text-wrap: balance;
   }
 }
+
+
+
+
+* {
+  scrollbar-width: thin; /* 'auto' o 'thin' para hacerla más fina */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* thumb y track color */
+}

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../../components/sidebar';
 import UserBanner from '@/components/banner_usuario';
 import { usePathname } from 'next/navigation';
-import Filtrador from '@/components/buscadores/operaciones/filtrados_stock';
+import Filtrador from '@/components/operaciones/filtros/filtrados_stock';
 
 export default function Panel() {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export default function Panel() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-white relative">
+    <div className="flex flex-col min-h-screen bg-white relative width: 100%">
       <UserBanner userProfilePic={'aaron.jpeg'} pageName={''}/>
       <Filtrador
         selectedWeek={selectedWeek}
