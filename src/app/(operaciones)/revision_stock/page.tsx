@@ -17,7 +17,7 @@ export default function Panel() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white relative width: 100%">
-      <UserBanner userProfilePic={'aaron.jpeg'} pageName={''}/>
+      <UserBanner userProfilePic={'userCat.jpg'} pageName={''}/>
       <Filtrador
         selectedWeek={selectedWeek}
         setSelectedWeek={setSelectedWeek}
