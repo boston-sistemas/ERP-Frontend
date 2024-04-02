@@ -2,16 +2,30 @@
 
 
 import React, { useState } from 'react';
-import Sidebar from '../../components/sidebar';
+import Sidebar from '../../../components/sidebar';
 import UserBanner from '@/components/banner_usuario';
 import { usePathname } from 'next/navigation';
+import Filtrador from '@/components/buscadores/operaciones/filtrados_stock';
 
 export default function Panel() {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedWeek, setSelectedWeek] = useState('semana');
+  const [selectedTissue, setSelectedTissue] = useState('tejeduria');
+  const [searchQuery, setSearchQuery] = useState('');
+
+
   return (
     <div className="flex flex-col min-h-screen bg-white relative">
-      <UserBanner userProfilePic={'aaron.jpeg'} pageName={''}></UserBanner>
+      <UserBanner userProfilePic={'aaron.jpeg'} pageName={''}/>
+      <Filtrador
+        selectedWeek={selectedWeek}
+        setSelectedWeek={setSelectedWeek}
+        selectedTissue={selectedTissue}
+        setSelectedTissue={setSelectedTissue}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activePage={pathname} />
       {sidebarOpen && (
         <div
@@ -28,7 +42,7 @@ export default function Panel() {
         />
       )}
       <div className={sidebarOpen ? "content-overlay" : ""}>
-        {/* Resto del contenido*/}
+        {/* Resto del contenido de tu página */}
       </div>
     </div>
   );
