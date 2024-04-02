@@ -6,6 +6,7 @@ import Sidebar from '../../../components/sidebar';
 import UserBanner from '@/components/banner_usuario';
 import { usePathname } from 'next/navigation';
 import Filtrador from '@/components/operaciones/filtros/filtrados_stock';
+import StickyHeadTable from '@/components/operaciones/tablas/tabla_stock_pendiente';
 
 export default function Panel() {
   const pathname = usePathname();
@@ -42,8 +43,9 @@ export default function Panel() {
         />
       )}
       <div className={sidebarOpen ? "content-overlay" : ""}>
-        {/* Resto del contenido de tu página */}
+       
       </div>
+      <StickyHeadTable/>
     </div>
   );
 }
