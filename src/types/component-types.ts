@@ -10,5 +10,5 @@ export type FormSubmitEvent = FormEvent<HTMLFormElement>;
 export type SidebardProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  activePage?:string;
+  activePage?:string | null;
 };
