@@ -8,13 +8,14 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
+
 // Definición de las columnas según los datos de la imagen
 interface Column {
   id: 'orden' | 'fecha' | 'tejeduria' | 'programado' | 'consumido' | 'restante' | 'merma';
   label: string;
   minWidth?: number;
   align?: 'right' | 'center';
-  format?: (value: number | null) => string;
+  format?: (value: number | null | string) => string;
 }
 
 const columns: readonly Column[] = [
@@ -24,8 +25,9 @@ const columns: readonly Column[] = [
   {
     id: 'programado',
     label: 'Programado (Kg)',
+    align: 'right',
     minWidth: 130,
-    align: 'right'
+    
   },
   {
     id: 'consumido',
@@ -44,7 +46,12 @@ const columns: readonly Column[] = [
     label: 'Merma',
     minWidth: 100,
     align: 'right',
-    format: (value) => value !== null ? `${value.toFixed(1)}%` : '–',
+    format: (value) => {
+      // Verificamos que value no es null y es de tipo number antes de llamar a toFixed
+      return value !== null && typeof value === 'number'
+        ? `${value.toFixed(1)}%`
+        : '–';
+    },
   },
 ];
 
@@ -73,26 +80,26 @@ function createData(
 
 // Simulando filas de datos basadas en la imagen
 const rows = [
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null),
-  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, null),
-  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, null)
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 3),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 4),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 4),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 2),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 2),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 3),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 5),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 2),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 2),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 5),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 2),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 3),
+  createData('TRI1703', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1),
+  createData('TRI1598', '08-01-2024', 'Tricot Fine S.A.', 2222.64, 2000.00, 222.64, 3)
   // ... añade más filas según sea necesario
 ];
 
@@ -135,7 +142,7 @@ export default function StickyHeadTable() {
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={column.id} align={column.align} style={{ fontWeight: column.id === 'orden' ? 'bold' : 'normal' }}>
                           {column.format && value !== null
                             ? column.format(value)
                             : value}
