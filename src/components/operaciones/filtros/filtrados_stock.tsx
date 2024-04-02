@@ -30,10 +30,29 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
   };
 
   return (
-    <Box display="flex" alignItems="center" p={2} bgcolor="white"
-         style={{ marginLeft: 50, marginRight: 50, height: '130px', borderBottom: '1px solid #E0E0E0'}}>
+    <Box 
+    display="flex" alignItems="center" p={2} bgcolor="white"
+    sx={{
+      marginLeft:'55px',
+      width: 'auto',
+      px: 2, 
+      height: '130px', borderBottom: '1px solid #E0E0E0',
+      maxWidth: 'calc(100%-10px)', 
+      boxSizing: 'border-box', 
+      overflowX: 'auto', // Permite desplazamiento horizontal si el contenido es muy ancho
+    }}
+      >
       
-      <ArchiveIcon style={{color:"black", fontSize: 100 }}/>
+      <ArchiveIcon sx={{
+        color: "black", 
+        fontSize: {
+          xs: '3rem', // Aquí haces que el ícono desaparezca en pantallas extra pequeñas
+          sm: '4rem', // Tamaño más pequeño para pantallas pequeñas
+          md: '5rem', // Tamaño mediano para pantallas medianas
+          lg: '6rem', // Tamaño más grande para pantallas grandes
+        }, 
+        transition: 'font-size 0.5s ease', // Suaviza la transición de tamaño
+      }}/>
       
       <Box flexGrow={1} display="flex" justifyContent="flex-end">
         <FormControl variant="outlined" style={{ width: '150px', height: '40px', marginLeft: '20px' }}>
