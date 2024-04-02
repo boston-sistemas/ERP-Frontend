@@ -42,7 +42,7 @@ export default function Panel() {
         />
       )}
       <div className={sidebarOpen ? "content-overlay" : ""}>
-        {/* Resto del contenido de  página */}
+        {/* Resto del contenido de tu página */}
       </div>
     </div>
   );
