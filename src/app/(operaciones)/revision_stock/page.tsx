@@ -69,7 +69,7 @@ export default function Panel() {
         REPORTE DE STOCK DE TEJEDURÍA PENDIENTE
       </Typography>
 
-      <Tabla_stock_pendiente/>
+      <Tabla_stock_cerrado/>
 
 
       </div>

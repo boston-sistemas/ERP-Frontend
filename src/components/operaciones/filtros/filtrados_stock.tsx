@@ -4,6 +4,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import Image from 'next/image';
 import SearchIcon from '@mui/icons-material/Search';
 import { Delete } from '@mui/icons-material';
+import { RotateLeft } from '@mui/icons-material';
 
 interface WeekTissueSelectorProps {
   selectedWeek: string;
@@ -52,9 +53,10 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
           lg: '6rem', // Tamaño más grande para pantallas grandes
         }, 
         transition: 'font-size 0.5s ease', // Suaviza la transición de tamaño
+        marginLeft: '13px'
       }}/>
       
-      <Box flexGrow={1} display="flex" justifyContent="flex-end">
+      <Box flexGrow={1} display="flex" justifyContent="flex-end" marginRight="15px">
         <FormControl variant="outlined" style={{ width: '150px', height: '40px', marginLeft: '20px' }}>
           <InputLabel style={{ backgroundColor: 'white', padding: '0 5px' }}>Semana</InputLabel>
           <Select
@@ -129,7 +131,7 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
         */}
         
         <IconButton onClick={handleReset}>
-          <Delete style={{color:"grey", fontSize: 25}}/>
+          <RotateLeft style={{color:"grey", fontSize: 25}}/>
         </IconButton>
       </Box>
     </Box>
