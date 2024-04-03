@@ -37,5 +37,5 @@ body {
 
 * {
   scrollbar-width: thin; /* 'auto' o 'thin' para hacerla más fina */
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* thumb y track color */
+  scrollbar-color: rgba(131, 131, 131, 0.986) transparent; /* thumb y track color */
 }

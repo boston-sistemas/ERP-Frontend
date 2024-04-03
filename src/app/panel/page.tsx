@@ -11,7 +11,7 @@ export default function Panel() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="flex flex-col min-h-screen bg-white relative">
-      <UserBanner userProfilePic={'aaron.jpeg'} pageName={''}/>
+      <UserBanner userProfilePic={'userCat.jpg'} pageName={''}/>
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activePage={pathname} />
       {sidebarOpen && (
         <div
