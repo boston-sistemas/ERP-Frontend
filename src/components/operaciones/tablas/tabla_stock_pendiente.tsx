@@ -10,11 +10,9 @@ import TableRow from '@mui/material/TableRow';
 import { Button, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -78,29 +76,19 @@ const rows = [
 export default function Tabla_stock_pendiente() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selected, setSelected] = React.useState<Record<string, boolean>>({});
+  const [selected, setSelected] = React.useState<string | null>(null);
   const [openDialog, setOpenDialog] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpenDialog(true);
-  };
-  
-  const handleClose = () => {
-    setOpenDialog(false);
-  };
+  const handleClickOpen = () => setOpenDialog(true);
 
+  
+  const handleClose = () => setOpenDialog(false);
+
+  const isSelected = (order: string) => selected === order;
   const getSelectedRows = () => {
-    return Object.keys(selected)
-      .filter((key) => selected[key])
-      .map((key) => rows.find((row) => row.order === key)!)
-      .filter(Boolean)
-      .map((row) => ({
-        order: row.order,
-        textile: row.textile,
-        consumed: row.consumed,
-        programmed: row.programmed,
-        progress: row.progress
-      }));
+    if (!selected) return [];
+    const row = rows.find((row) => row.order === selected);
+    return row ? [row] : [];
   };
 
 
@@ -114,7 +102,7 @@ export default function Tabla_stock_pendiente() {
     setPage(0);
   };
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+{/*  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.reduce((acc, row) => {
         acc[row.order] = true;
@@ -125,22 +113,21 @@ export default function Tabla_stock_pendiente() {
       setSelected({});
     }
   };
+*/}
 
-  const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
-    const newSelected = { ...selected, [order]: !selected[order] };
-    if (newSelected[order]) {
-      setSelected(newSelected);
-    } else {
-      const remainingSelected = { ...newSelected };
-      delete remainingSelected[order];
-      setSelected(remainingSelected);
-    }
-  };
+const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
+  // Si la fila ya está seleccionada, la deselecciona. De lo contrario, selecciona la nueva fila.
+  if (selected === order) {
+    setSelected(null);
+  } else {
+    setSelected(order);
+  }
+};
 
   const selectedRows = getSelectedRows();
   const isAnyOrderSelected = selectedRows.length > 0;
 
-  const isSelected = (order: string) => !!selected[order];
+ 
 
   const getStateColor = (state: any) => {
     switch (state) {
@@ -157,65 +144,13 @@ export default function Tabla_stock_pendiente() {
     }
   };
 
-  {/* DESCOMENTAR SI QUIERES LEYENDA
-  const Legend = () => {
-    const legendItems = [
-      { label: 'No iniciado', color: '#9C9DA1' },
-      { label: 'Detenido', color: '#DD2E44' },
-      { label: 'En curso', color: '#FFC225' },
-      { label: 'Listo', color: '#3EC564' },
-    ];
-  
-    return (
-      <Grid container alignItems="center" spacing={2} marginTop={0} marginLeft={0} marginBottom={2}>
-        {legendItems.map((item) => (
-          <Grid item key={item.label} display="flex" alignItems="center">
-            <Box
-              width={16}
-              height={16}
-              bgcolor={item.color}
-              marginRight={1}
-              borderRadius="10%"
-            />
-            <Typography variant="body2">{item.label}</Typography>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
-
-  */}
-  
-
-  
-  
-
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px'}}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-            <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)'}}>
-              <Checkbox
-                color="default" 
-                indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
-                checked={rows.length > 0 && Object.keys(selected).length === rows.length}
-                onChange={handleSelectAllClick}
-                sx={{
-                  color: 'white', // Color por defecto del icono
-                  '&.MuiCheckbox-root': { 
-                    color: 'white', // Color del borde del checkbox cuando no está seleccionado
-                  },
-                  '&.Mui-checked': { 
-                    color: 'white', // Color del checkbox cuando está seleccionado
-                  },
-                  '& .MuiSvgIcon-root': { 
-                    fill: 'white', // Color del interior del checkbox
-                  },
-                }}
-              />
-            </TableCell>
+            <TableCell padding="normal" style={{ backgroundColor: 'rgb(20, 67, 131)'}}/>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -278,11 +213,6 @@ export default function Tabla_stock_pendiente() {
         alignItems: 'center',
         flexWrap: 'wrap', 
         }}>
-          {/* DESCOMENTAR SI QUIEREN COLOCAR LEYENDA
-          <Box sx={{ flex: '1 1 auto' }}> 
-            <Legend />
-          </Box>
-          */}
           <Button 
             variant="contained"
             className="mt-4 mb-4 ml-4 w-50 bg-gray-700 text-white py-1 rounded hover:bg-black transition duration-300 ease-in-out"
@@ -293,7 +223,7 @@ export default function Tabla_stock_pendiente() {
           <Box sx={{ flex: '1 1 auto' }}> 
           
             <TablePagination
-              rowsPerPageOptions={[2, 25, 100]}
+              rowsPerPageOptions={[10, 25, 50]}
               component="div"
               count={rows.length}
               rowsPerPage={rowsPerPage}
@@ -313,7 +243,7 @@ export default function Tabla_stock_pendiente() {
       open={openDialog}
       onClose={handleClose}
       PaperProps={{
-        style: { borderRadius: 8, overflow: 'hidden' }
+        style: { borderRadius: 8, overflow: 'hidden', maxWidth: '680px', width: '100%' }, // Ajusta el ancho aquí
       }}
     >
       <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -341,14 +271,29 @@ export default function Tabla_stock_pendiente() {
             <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
               ¿Estás seguro de <strong>cerrar</strong> estas órdenes?
             </Typography>
-            <Box sx={{ overflowX: 'auto' }}> 
-              {getSelectedRows().map((row, index) => (
-                <Box key={index} sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 1, pb: 1, width: 'max-content' }}>
-                  <Typography gutterBottom noWrap>
-                    {`${index + 1}. Orden: ${row.order} - Tejeduría: ${row.textile} - Consumido: ${row.consumed}/${row.programmed} kg - Progreso: ${row.progress.toFixed(2)}%`}
-                  </Typography>
-                </Box>
-              ))}
+            <Box sx={{ overflowX: 'auto' }}>
+              <Table size="small" sx={{ margin: 'auto', maxWidth: '700px' }}> 
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Orden</TableCell>
+                    <TableCell align="center">Tejeduría</TableCell>
+                    <TableCell align="center">Consumido (kg)</TableCell>
+                    <TableCell align="center">Programado (kg)</TableCell>
+                    <TableCell align="center">Progreso (%)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {getSelectedRows().map((row) => (
+                    <TableRow key={row.order}>
+                      <TableCell align="center">{row.order}</TableCell>
+                      <TableCell align="center">{row.textile}</TableCell>
+                      <TableCell align="center">{row.consumed}</TableCell>
+                      <TableCell align="center">{row.programmed}</TableCell>
+                      <TableCell align="center">{row.progress.toFixed(2)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Box>
           </>
         )}
@@ -357,7 +302,7 @@ export default function Tabla_stock_pendiente() {
         <Button onClick={handleClose}>
           Cancelar
         </Button>
-        {Object.keys(selected).length > 0 && ( 
+        {selected !== null && (
           <Button onClick={handleClose} color="error">
             Aceptar
           </Button>
