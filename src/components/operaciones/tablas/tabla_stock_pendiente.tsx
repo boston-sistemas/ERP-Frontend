@@ -60,9 +60,9 @@ function createData(
 
 const rows = [
   // Example row, this should be replaced with actual data
-  createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En progreso'),
-  createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En progreso'),
-  createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En progreso'),
+  createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En curso'),
+  createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Listo'),
+  createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Detenido'),
 ];
 
 export default function Tabla_stock_pendiente() {
@@ -109,7 +109,7 @@ export default function Tabla_stock_pendiente() {
     ];
   
     return (
-      <Grid container alignItems="center" spacing={2}>
+      <Grid container alignItems="center" spacing={2} marginTop={0} marginLeft={0} marginBottom={2}>
         {legendItems.map((item) => (
           <Grid item key={item.label} display="flex" alignItems="center">
             <Box
@@ -117,7 +117,7 @@ export default function Tabla_stock_pendiente() {
               height={16}
               bgcolor={item.color}
               marginRight={1}
-              borderRadius="50%"
+              borderRadius="10%"
             />
             <Typography variant="body2">{item.label}</Typography>
           </Grid>
@@ -202,8 +202,16 @@ export default function Tabla_stock_pendiente() {
         </Table>
       </TableContainer>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap', 
+    }}>
+      <Box sx={{ flex: '1 1 auto' }}> 
         <Legend />
+      </Box>
+      <Box sx={{ flex: '1 1 auto' }}> 
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
@@ -214,6 +222,7 @@ export default function Tabla_stock_pendiente() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+    </Box>
     </Paper>
   );
 }

@@ -46,19 +46,19 @@ export default function Panel() {
         />
       )}
       <div className={sidebarOpen ? "content-overlay" : ""}>
-      
+      {/*
       <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: 'black', margin: '20px 0', textAlign: 'left' ,width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px'}}>
         Reporte de stock de tejeduría PENDIENTE
       </Typography>
-
+      */}
 
       <Tabla_stock_pendiente/>
       
-
+      {/*
       <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: 'black', margin: '20px 0', textAlign: 'left' ,width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px'}}>
         Reporte de stock de tejeduría CERRADO
       </Typography>
-
+      */}
       <Tabla_stock_cerrado/>
 
 
