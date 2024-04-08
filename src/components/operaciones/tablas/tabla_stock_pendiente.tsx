@@ -223,7 +223,7 @@ const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
           <Box sx={{ flex: '1 1 auto' }}> 
           
             <TablePagination
-              rowsPerPageOptions={[10, 25, 50]}
+              rowsPerPageOptions={[10, 25, 100]}
               component="div"
               count={rows.length}
               rowsPerPage={rowsPerPage}
