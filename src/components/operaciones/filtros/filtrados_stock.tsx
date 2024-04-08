@@ -7,8 +7,6 @@ import { Delete } from '@mui/icons-material';
 import { RotateLeft } from '@mui/icons-material';
 
 interface WeekTissueSelectorProps {
-  selectedWeek: string;
-  setSelectedWeek: (week: string) => void;
   selectedTissue: string;
   setSelectedTissue: (tissue: string) => void;
   searchQuery: string;
@@ -16,8 +14,6 @@ interface WeekTissueSelectorProps {
 }
 
 const Filtrador: React.FC<WeekTissueSelectorProps> = ({
-  selectedWeek,
-  setSelectedWeek,
   selectedTissue,
   setSelectedTissue,
   searchQuery,
@@ -25,7 +21,6 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
 }) => {
 
   const handleReset = () => {
-    setSelectedWeek('semana');
     setSelectedTissue('tejeduria');
     setSearchQuery('');
   };
@@ -57,23 +52,6 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
       }}/>
       
       <Box flexGrow={1} display="flex" justifyContent="flex-end" marginRight="15px">
-        <FormControl variant="outlined" style={{ width: '150px', height: '40px', marginLeft: '20px' }}>
-          <InputLabel style={{ backgroundColor: 'white', padding: '0 5px' }}>Semana</InputLabel>
-          <Select
-            value={selectedWeek}
-            onChange={(e) => setSelectedWeek(e.target.value as string)}
-            label="Semana"
-            style={{ 
-              height: '40px', 
-              backgroundColor: 'white',
-              fontSize: '16px'
-            }}
-          >
-            <MenuItem value={'1'}>1</MenuItem>
-            <MenuItem value={'2'}>2</MenuItem>
-            {/* Etc... */}
-          </Select>
-        </FormControl>
         <FormControl variant="outlined" style={{ width: '150px', height: '40px', marginLeft: '20px' }}>
           <InputLabel style={{ backgroundColor: 'white', padding: '0 5px' }}>Tejeduría</InputLabel>
           <Select
@@ -131,7 +109,7 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
         */}
         
         <IconButton onClick={handleReset}>
-          <RotateLeft style={{color:"grey", fontSize: 25}}/>
+          <Delete style={{color:"grey", fontSize: 25}}/>
         </IconButton>
       </Box>
     </Box>

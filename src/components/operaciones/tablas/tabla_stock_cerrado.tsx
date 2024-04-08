@@ -7,80 +7,64 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 
 interface Column {
-  id: 'name' | 'code' | 'population' | 'size' | 'density';
+  id: 'order' | 'date' | 'textile' | 'programmed' | 'consumed' | 'remaining' | 'waste' | 'balance';
   label: string;
   minWidth?: number;
-  align?: 'right';
+  align?: 'right' | 'left' | 'center';
   format?: (value: number) => string;
 }
 
 const columns: readonly Column[] = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-  },
+  { id: 'order', label: 'Orden', minWidth: 100, align: 'left' },
+  { id: 'date', label: 'Fecha', minWidth: 100, align: 'left' },
+  { id: 'textile', label: 'Tejeduría', minWidth: 130, align: 'left' },
+  { id: 'programmed', label: 'Programado (kg)', minWidth: 130, align: 'left', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'left', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'left', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'waste', label: 'Merma', minWidth: 100, align: 'left', format: (value: number) => `${value.toFixed(2)} %` },
+  { id: 'balance', label: 'Saldo Recogido', minWidth: 120, align: 'left'},
 ];
 
 interface Data {
-  name: string;
-  code: string;
-  population: number;
-  size: number;
-  density: number;
+  order: string;
+  date: string;
+  textile: string;
+  programmed: number;
+  consumed: number;
+  remaining: number;
+  waste: number;
+  balance: boolean;
 }
 
 function createData(
-  name: string,
-  code: string,
-  population: number,
-  size: number,
+  order: string,
+  date: string,
+  textile: string,
+  programmed: number,
+  consumed: number,
+  remaining: number,
+  waste: number,
+  balance: boolean,
 ): Data {
-  const density = population / size;
-  return { name, code, population, size, density };
+  return { order, date, textile, programmed, consumed, remaining, waste, balance };
 }
 
+// Replace with your actual data rows
 const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
+  createData('TRI1704', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1.2, false),
+  createData('TRI1705', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1.2, false),
+  createData('TRI1707', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1.2, false),
+  createData('TRI1708', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1.2, false),
+  createData('TRI17010', '06-01-2024', 'Tricot Fine S.A.', 2222.64, 1979.36, 243.28, 1.2, false),
 ];
 
 export default function Tabla_stock_cerrado() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selected, setSelected] = React.useState<Record<string, boolean>>({});
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -91,17 +75,58 @@ export default function Tabla_stock_cerrado() {
     setPage(0);
   };
 
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = rows.reduce((acc, row) => {
+        acc[row.order] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      setSelected(newSelected);
+    } else {
+      setSelected({});
+    }
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
+    setSelected((prevSelected) => ({
+      ...prevSelected,
+      [order]: !prevSelected[order],
+    }));
+  };
+
+  const isSelected = (order: string) => !!selected[order];
+
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '80px'}}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+            <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)'}}>
+              <Checkbox
+                color="default" // Establecer el color predeterminado para poder aplicar estilos personalizados
+                indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
+                checked={rows.length > 0 && Object.keys(selected).length === rows.length}
+                onChange={handleSelectAllClick}
+                sx={{
+                  color: 'white', // Color por defecto del icono
+                  '&.MuiCheckbox-root': { // Estilos para el estado no marcado
+                    color: 'white', // Color del borde del checkbox cuando no está seleccionado
+                  },
+                  '&.Mui-checked': { // Estilos para el estado marcado
+                    color: 'white', // Color del checkbox cuando está seleccionado
+                  },
+                  '& .MuiSvgIcon-root': { // Estilos para el icono dentro del checkbox
+                    fill: 'white', // Color del interior del checkbox
+                  },
+                }}
+              />
+              </TableCell>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ backgroundColor: 'rgb(212, 18, 25)', color: 'white', minWidth: column.minWidth }}
+                  style={{ backgroundColor: 'rgb(20, 67, 131)', color: 'white', minWidth: column.minWidth }}
                 >
                   {column.label}
                 </TableCell>
@@ -112,8 +137,23 @@ export default function Tabla_stock_cerrado() {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
+                const isItemSelected = isSelected(row.order);
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow 
+                    hover 
+                    onClick={(event) => handleClick(event, row.order)}
+                    role="checkbox" 
+                    tabIndex={-1} 
+                    key={row.order}
+                    selected={isItemSelected}
+                    sx={{ '&.Mui-selected, &.Mui-selected:hover': { backgroundColor: 'rgba(25, 118, 210, 0.1)' } }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                      />
+                    </TableCell>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (

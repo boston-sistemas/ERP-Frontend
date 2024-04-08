@@ -7,9 +7,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Typography } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 interface Column {
-  id: 'order' | 'date' | 'textile' | 'programming' | 'quantity' | 'progress' | 'density' | 'color';
+  id: 'order' | 'date' | 'textile' | 'programmed' | 'consumed' | 'remaining' | 'waste' | 'progress' | 'state';
   label: string;
   minWidth?: number;
   align?: 'right' | 'left' | 'center';
@@ -17,50 +21,54 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'order', label: 'Orden', minWidth: 100, align: 'left' },
-  { id: 'date', label: 'Fecha', minWidth: 100, align: 'left' },
-  { id: 'textile', label: 'Tejeduría', minWidth: 170, align: 'left' },
-  { id: 'programming', label: 'Programación', minWidth: 170, align: 'right', format: (value: number) => value.toLocaleString('en-US') },
-  { id: 'quantity', label: 'Cantidad', minWidth: 100, align: 'right' },
-  { id: 'progress', label: 'Progreso', minWidth: 120, align: 'right', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'density', label: 'Densidad', minWidth: 100, align: 'right', format: (value: number) => `${value.toFixed(2)} g/cm³` },
-  { id: 'color', label: 'Color', minWidth: 100, align: 'center' },
+  { id: 'order', label: 'Orden', minWidth: 100, align: 'center' },
+  { id: 'date', label: 'Fecha', minWidth: 100, align: 'center' },
+  { id: 'textile', label: 'Tejeduría', minWidth: 130, align: 'center' },
+  { id: 'programmed', label: 'Programado (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
+  { id: 'progress', label: 'Progreso', minWidth: 120, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
+  { id: 'state', label: 'Estado', minWidth: 100, align: 'center' },
 ];
 
 interface Data {
   order: string;
   date: string;
   textile: string;
-  programming: number;
-  quantity: number;
+  programmed: number;
+  consumed: number;
+  remaining: number;
+  waste: number;
   progress: number;
-  density: number;
-  color: string;
+  state: string;
 }
-
 
 function createData(
   order: string,
-  date: Date,
+  date: string,
   textile: string,
-  programming: number,
-  quantity: number,
+  programmed: number,
+  consumed: number,
+  remaining: number,
+  waste: number,
   progress: number,
-  density: number,
-  color: string,
+  state: string,
 ): Data {
-  const formattedDate = date.toLocaleDateString('es-ES');
-  return { order, date:formattedDate, textile, programming, quantity, progress, density, color };
+  return { order, date, textile, programmed, consumed, remaining, waste, progress, state};
 }
 
 const rows = [
-  createData('ORD123', new Date(), 'Tricot Fine S.A.', 22564, 5000, 20.0, 2.34, 'Rojo'),
+  // Example row, this should be replaced with actual data
+  createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En progreso'),
+  createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En progreso'),
+  createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En progreso'),
 ];
-
 
 export default function Tabla_stock_pendiente() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selected, setSelected] = React.useState<Record<string, boolean>>({});
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -71,12 +79,80 @@ export default function Tabla_stock_pendiente() {
     setPage(0);
   };
 
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = rows.reduce((acc, row) => {
+        acc[row.order] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      setSelected(newSelected);
+    } else {
+      setSelected({});
+    }
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
+    setSelected((prevSelected) => ({
+      ...prevSelected,
+      [order]: !prevSelected[order],
+    }));
+  };
+
+  const isSelected = (order: string) => !!selected[order];
+
+  const Legend = () => {
+    const legendItems = [
+      { label: 'No Iniciado', color: '#838383' },
+      { label: 'Detenido', color: '#DD2E44' },
+      { label: 'En curso', color: '#FDDB64' },
+      { label: 'Listo', color: '#3EC564' },
+    ];
+  
+    return (
+      <Grid container alignItems="center" spacing={2}>
+        {legendItems.map((item) => (
+          <Grid item key={item.label} display="flex" alignItems="center">
+            <Box
+              width={16}
+              height={16}
+              bgcolor={item.color}
+              marginRight={1}
+              borderRadius="50%"
+            />
+            <Typography variant="body2">{item.label}</Typography>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
+  
+
   return (
-    <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '110px'}}>
+    <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px'}}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+            <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)'}}>
+              <Checkbox
+                color="default" // Establecer el color predeterminado para poder aplicar estilos personalizados
+                indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
+                checked={rows.length > 0 && Object.keys(selected).length === rows.length}
+                onChange={handleSelectAllClick}
+                sx={{
+                  color: 'white', // Color por defecto del icono
+                  '&.MuiCheckbox-root': { // Estilos para el estado no marcado
+                    color: 'white', // Color del borde del checkbox cuando no está seleccionado
+                  },
+                  '&.Mui-checked': { // Estilos para el estado marcado
+                    color: 'white', // Color del checkbox cuando está seleccionado
+                  },
+                  '& .MuiSvgIcon-root': { // Estilos para el icono dentro del checkbox
+                    fill: 'white', // Color del interior del checkbox
+                  },
+                }}
+              />
+            </TableCell>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -92,8 +168,23 @@ export default function Tabla_stock_pendiente() {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
+                const isItemSelected = isSelected(row.order);
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.order}>
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.order)}
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.order}
+                    selected={isItemSelected}
+                    sx={{ '&.Mui-selected, &.Mui-selected:hover': { backgroundColor: 'rgba(25, 118, 210, 0.1)' } }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                      />
+                    </TableCell>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -110,15 +201,19 @@ export default function Tabla_stock_pendiente() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
+        <Legend />
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
     </Paper>
   );
 }
