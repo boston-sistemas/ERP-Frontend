@@ -100,11 +100,27 @@ export default function Tabla_stock_pendiente() {
 
   const isSelected = (order: string) => !!selected[order];
 
+  const getStateColor = (state: any) => {
+    switch (state) {
+      case 'No Iniciado':
+        return '#838383';
+      case 'Detenido':
+        return '#DD2E44';
+      case 'En curso':
+        return '#FBD304';
+      case 'Listo':
+        return '#3EC564';
+      default:
+        return 'none';
+    }
+  };
+
+  {/* DESCOMENTAR SI QUIERES LEYENDA
   const Legend = () => {
     const legendItems = [
       { label: 'No Iniciado', color: '#838383' },
       { label: 'Detenido', color: '#DD2E44' },
-      { label: 'En curso', color: '#FDDB64' },
+      { label: 'En curso', color: '#FBD304' },
       { label: 'Listo', color: '#3EC564' },
     ];
   
@@ -125,6 +141,9 @@ export default function Tabla_stock_pendiente() {
       </Grid>
     );
   };
+
+  */}
+  
   
 
   return (
@@ -169,6 +188,7 @@ export default function Tabla_stock_pendiente() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 const isItemSelected = isSelected(row.order);
+                const stateColor = getStateColor(row.state);
                 return (
                   <TableRow
                     hover
@@ -188,7 +208,13 @@ export default function Tabla_stock_pendiente() {
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell 
+                          key={column.id} 
+                          align={column.align} 
+                          style={{
+                          minWidth: column.minWidth,
+                          ...(column.id === 'state' ? { backgroundColor: stateColor, color: 'white' } : {}),
+                        }}>
                           {column.format && value  !== null && value !== undefined
                             ? column.format(value)
                             : value}
@@ -208,9 +234,11 @@ export default function Tabla_stock_pendiente() {
         alignItems: 'center',
         flexWrap: 'wrap', 
     }}>
+      {/* DESCOMENTAR SI QUIEREN COLOCAR LEYENDA
       <Box sx={{ flex: '1 1 auto' }}> 
         <Legend />
       </Box>
+      */}
       <Box sx={{ flex: '1 1 auto' }}> 
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
