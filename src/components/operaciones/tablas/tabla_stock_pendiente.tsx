@@ -18,8 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 
 
@@ -70,7 +69,6 @@ function createData(
 }
 
 const rows = [
-  // Example row, this should be replaced with actual data
   createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En curso'),
   createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Listo'),
   createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Detenido'),
@@ -94,8 +92,15 @@ export default function Tabla_stock_pendiente() {
   const getSelectedRows = () => {
     return Object.keys(selected)
       .filter((key) => selected[key])
-      .map((key) => rows.find((row) => row.order === key))
-      .filter(Boolean); 
+      .map((key) => rows.find((row) => row.order === key)!)
+      .filter(Boolean)
+      .map((row) => ({
+        order: row.order,
+        textile: row.textile,
+        consumed: row.consumed,
+        programmed: row.programmed,
+        progress: row.progress
+      }));
   };
 
 
@@ -122,11 +127,18 @@ export default function Tabla_stock_pendiente() {
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
-    setSelected((prevSelected) => ({
-      ...prevSelected,
-      [order]: !prevSelected[order],
-    }));
+    const newSelected = { ...selected, [order]: !selected[order] };
+    if (newSelected[order]) {
+      setSelected(newSelected);
+    } else {
+      const remainingSelected = { ...newSelected };
+      delete remainingSelected[order];
+      setSelected(remainingSelected);
+    }
   };
+
+  const selectedRows = getSelectedRows();
+  const isAnyOrderSelected = selectedRows.length > 0;
 
   const isSelected = (order: string) => !!selected[order];
 
@@ -186,19 +198,19 @@ export default function Tabla_stock_pendiente() {
             <TableRow>
             <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)'}}>
               <Checkbox
-                color="default" // Establecer el color predeterminado para poder aplicar estilos personalizados
+                color="default" 
                 indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
                 checked={rows.length > 0 && Object.keys(selected).length === rows.length}
                 onChange={handleSelectAllClick}
                 sx={{
                   color: 'white', // Color por defecto del icono
-                  '&.MuiCheckbox-root': { // Estilos para el estado no marcado
+                  '&.MuiCheckbox-root': { 
                     color: 'white', // Color del borde del checkbox cuando no está seleccionado
                   },
-                  '&.Mui-checked': { // Estilos para el estado marcado
+                  '&.Mui-checked': { 
                     color: 'white', // Color del checkbox cuando está seleccionado
                   },
-                  '& .MuiSvgIcon-root': { // Estilos para el icono dentro del checkbox
+                  '& .MuiSvgIcon-root': { 
                     fill: 'white', // Color del interior del checkbox
                   },
                 }}
@@ -296,51 +308,62 @@ export default function Tabla_stock_pendiente() {
 
     {/*ALERTA POPUP*/}
     {/* Dialog */}
-      <Dialog
-        open={openDialog}
-        onClose={handleClose}
-        PaperProps={{
-          style: { borderRadius: 8 }
-        }}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          Cerrar orden
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            ¿Estás seguro de cerrar estas ordenes?
+
+    <Dialog
+      open={openDialog}
+      onClose={handleClose}
+      PaperProps={{
+        style: { borderRadius: 8, overflow: 'hidden' }
+      }}
+    >
+      <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        <ErrorOutlineIcon color="warning" sx={{ fontSize: '10rem', top: 10, left: 'calc(50% - 20px)' }} />
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers sx={{ overflowX: 'auto', width: '100%' }}>
+        {!isAnyOrderSelected ? (
+          <Typography gutterBottom textAlign="center" mt="10px" fontSize="18px">
+            No hay nada seleccionado
           </Typography>
-          {getSelectedRows().map((row, index) => (
-            <Typography gutterBottom key={index}>
-              {`${index + 1}. Orden: ${row.order} Tejeduría: ${row.textile} Progreso: ${row.consumed}/${row.programmed} kg`}
+        ) : (
+          <>
+            <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
+              ¿Estás seguro de <strong>cerrar</strong> estas órdenes?
             </Typography>
-          ))}
-          <Typography gutterBottom color="textSecondary">
-            Recuerda que es una operación irreversible.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Cancelar
-          </Button>
+            <Box sx={{ overflowX: 'auto' }}> 
+              {getSelectedRows().map((row, index) => (
+                <Box key={index} sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 1, pb: 1, width: 'max-content' }}>
+                  <Typography gutterBottom noWrap>
+                    {`${index + 1}. Orden: ${row.order} - Tejeduría: ${row.textile} - Consumido: ${row.consumed}/${row.programmed} kg - Progreso: ${row.progress.toFixed(2)}%`}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>
+          Cancelar
+        </Button>
+        {Object.keys(selected).length > 0 && ( 
           <Button onClick={handleClose} color="error">
             Aceptar
           </Button>
-        </DialogActions>
-      </Dialog>
-
+        )}
+      </DialogActions>
+    </Dialog>
     </Paper>
 
   );
