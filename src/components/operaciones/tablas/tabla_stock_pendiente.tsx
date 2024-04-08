@@ -7,10 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+
 
 interface Column {
   id: 'order' | 'date' | 'textile' | 'programmed' | 'consumed' | 'remaining' | 'waste' | 'progress' | 'state';
@@ -63,6 +64,7 @@ const rows = [
   createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En curso'),
   createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Listo'),
   createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Detenido'),
+  createData('TRI1610', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, '-')
 ];
 
 export default function Tabla_stock_pendiente() {
@@ -102,12 +104,12 @@ export default function Tabla_stock_pendiente() {
 
   const getStateColor = (state: any) => {
     switch (state) {
-      case 'No Iniciado':
-        return '#838383';
+      case '-':
+        return '#9C9DA1';
       case 'Detenido':
         return '#DD2E44';
       case 'En curso':
-        return '#FBD304';
+        return '#FFC225';
       case 'Listo':
         return '#3EC564';
       default:
@@ -118,9 +120,9 @@ export default function Tabla_stock_pendiente() {
   {/* DESCOMENTAR SI QUIERES LEYENDA
   const Legend = () => {
     const legendItems = [
-      { label: 'No Iniciado', color: '#838383' },
+      { label: 'No iniciado', color: '#9C9DA1' },
       { label: 'Detenido', color: '#DD2E44' },
-      { label: 'En curso', color: '#FBD304' },
+      { label: 'En curso', color: '#FFC225' },
       { label: 'Listo', color: '#3EC564' },
     ];
   
@@ -176,7 +178,7 @@ export default function Tabla_stock_pendiente() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ backgroundColor: 'rgb(20, 67, 131)', color: 'white', minWidth: column.minWidth }}
+                  style={{ backgroundColor: 'rgb(20, 67, 131)', color: 'white', minWidth: column.minWidth}}
                 >
                   {column.label}
                 </TableCell>
@@ -239,15 +241,24 @@ export default function Tabla_stock_pendiente() {
         <Legend />
       </Box>
       */}
+      <Button 
+        variant="contained"
+        className="mt-4 mb-4 ml-4 w-50 bg-gray-700 text-white py-1 rounded hover:bg-black transition duration-300 ease-in-out"
+        onClick={() => { /* función para cerrar órdenes */ }}
+      >
+        Cerrar
+      </Button>
       <Box sx={{ flex: '1 1 auto' }}> 
+       
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
+          rowsPerPageOptions={[2, 25, 100]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          className="mt-0"
         />
       </Box>
     </Box>
