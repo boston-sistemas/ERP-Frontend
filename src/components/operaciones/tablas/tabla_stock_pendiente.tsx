@@ -11,6 +11,16 @@ import { Button, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+
+
 
 
 interface Column {
@@ -71,11 +81,29 @@ export default function Tabla_stock_pendiente() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selected, setSelected] = React.useState<Record<string, boolean>>({});
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+  
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const getSelectedRows = () => {
+    return Object.keys(selected)
+      .filter((key) => selected[key])
+      .map((key) => rows.find((row) => row.order === key))
+      .filter(Boolean); 
+  };
+
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-
+  
+ 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -145,6 +173,8 @@ export default function Tabla_stock_pendiente() {
   };
 
   */}
+  
+
   
   
 
@@ -235,33 +265,83 @@ export default function Tabla_stock_pendiente() {
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap', 
-    }}>
-      {/* DESCOMENTAR SI QUIEREN COLOCAR LEYENDA
-      <Box sx={{ flex: '1 1 auto' }}> 
-        <Legend />
-      </Box>
-      */}
-      <Button 
-        variant="contained"
-        className="mt-4 mb-4 ml-4 w-50 bg-gray-700 text-white py-1 rounded hover:bg-black transition duration-300 ease-in-out"
-        onClick={() => { /* función para cerrar órdenes */ }}
+        }}>
+          {/* DESCOMENTAR SI QUIEREN COLOCAR LEYENDA
+          <Box sx={{ flex: '1 1 auto' }}> 
+            <Legend />
+          </Box>
+          */}
+          <Button 
+            variant="contained"
+            className="mt-4 mb-4 ml-4 w-50 bg-gray-700 text-white py-1 rounded hover:bg-black transition duration-300 ease-in-out"
+            onClick={handleClickOpen}
+          >
+            Cerrar
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }}> 
+          
+            <TablePagination
+              rowsPerPageOptions={[2, 25, 100]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              className="mt-0"
+            />
+          </Box>
+        </Box>
+
+
+    {/*ALERTA POPUP*/}
+    {/* Dialog */}
+      <Dialog
+        open={openDialog}
+        onClose={handleClose}
+        PaperProps={{
+          style: { borderRadius: 8 }
+        }}
       >
-        Cerrar
-      </Button>
-      <Box sx={{ flex: '1 1 auto' }}> 
-       
-        <TablePagination
-          rowsPerPageOptions={[2, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          className="mt-0"
-        />
-      </Box>
-    </Box>
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          Cerrar orden
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+            ¿Estás seguro de cerrar estas ordenes?
+          </Typography>
+          {getSelectedRows().map((row, index) => (
+            <Typography gutterBottom key={index}>
+              {`${index + 1}. Orden: ${row.order} Tejeduría: ${row.textile} Progreso: ${row.consumed}/${row.programmed} kg`}
+            </Typography>
+          ))}
+          <Typography gutterBottom color="textSecondary">
+            Recuerda que es una operación irreversible.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button onClick={handleClose} color="error">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Paper>
+
   );
 }
