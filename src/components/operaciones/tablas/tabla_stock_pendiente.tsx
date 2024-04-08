@@ -269,7 +269,7 @@ const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
         ) : (
           <>
             <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
-              ¿Estás seguro de <strong>cerrar</strong> estas órdenes?
+              ¿Estás seguro de <strong>cerrar</strong> esta orden?
             </Typography>
             <Box sx={{ overflowX: 'auto' }}>
               <Table size="small" sx={{ margin: 'auto', maxWidth: '700px' }}> 
