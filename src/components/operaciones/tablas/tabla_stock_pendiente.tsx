@@ -17,6 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 
@@ -67,10 +68,10 @@ function createData(
 }
 
 const rows = [
-  createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'En curso'),
-  createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Listo'),
-  createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, 'Detenido'),
-  createData('TRI1610', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 80.00, '-')
+  createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 10.00, 'En curso'),
+  createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 60.00, 'Listo'),
+  createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 40.00, 'Detenido'),
+  createData('TRI1610', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 90.00, '-')
 ];
 
 export default function Tabla_stock_pendiente() {
@@ -186,17 +187,29 @@ const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
                     </TableCell>
                     {columns.map((column) => {
                       const value = row[column.id];
+
                       return (
                         <TableCell 
                           key={column.id} 
                           align={column.align} 
                           style={{
-                          minWidth: column.minWidth,
-                          ...(column.id === 'state' ? { backgroundColor: stateColor, color: 'white' } : {}),
-                        }}>
-                          {column.format && value  !== null && value !== undefined
-                            ? column.format(value)
-                            : value}
+                            minWidth: column.minWidth,
+                            ...(column.id === 'state' ? { backgroundColor: stateColor, color: 'white' } : {}),
+                          }}>
+                          {column.id === 'progress' ? (
+                            <Box display="flex" alignItems="center">
+                              <Box width="100%" mr={1}>
+                              
+                                <LinearProgress variant="determinate" value={typeof value === 'number' ? value : 0} />
+                              </Box>
+                              <Box minWidth={35}>
+                                <Typography variant="body2" color="textSecondary">
+                                
+                                  {`${Math.round(typeof value === 'number' ? value : 0)}%`}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          ) : column.format && value !== null && value !== undefined ? column.format(value) : value}
                         </TableCell>
                       );
                     })}
