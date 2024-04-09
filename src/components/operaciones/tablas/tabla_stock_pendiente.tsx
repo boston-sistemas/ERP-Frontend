@@ -68,16 +68,32 @@ function createData(
 }
 
 const rows = [
-  createData('TRI1607', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 10.00, 'En curso'),
-  createData('TRI1601', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 60.00, 'Listo'),
-  createData('TRI1608', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 40.00, 'Detenido'),
-  createData('TRI1610', '06-01-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 90.00, '-')
+  createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 10.00, 'En curso'),
+  createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 22560, 19830, 2630, 2.50, 60.00, 'Listo'),
+  createData('RCA0349', '03-06-2024', 'Textiles Roca E.I.R.L.', 22570, 19900, 2650, 2.00, 40.00, 'Detenido'),
+  createData('FRA1402', '04-06-2024', 'Textil Defranco E.I.R.L.', 22580, 19950, 2600, 2.80, 90.00, '-'),
+  createData('TRI1610', '05-06-2024', 'Tricot Fine S.A.', 22590, 19880, 2610, 2.30, 85.00, 'En curso'),
+  createData('FRA1403', '06-06-2024', 'Textil Defranco E.I.R.L.', 22540, 19870, 2640, 2.60, 70.00, 'Listo'),
+  createData('RCA0350', '07-06-2024', 'Textiles Roca E.I.R.L.', 22550, 19920, 2660, 1.90, 50.00, 'Detenido'),
+  createData('TRI1612', '08-06-2024', 'Tricot Fine S.A.', 22600, 19980, 2670, 2.70, 95.00, '-'),
+  createData('RCA0351', '09-06-2024', 'Textiles Roca E.I.R.L.', 22520, 19840, 2680, 2.10, 75.00, 'En curso'),
+  createData('FRA1404', '10-06-2024', 'Textil Defranco E.I.R.L.', 22530, 19890, 2690, 2.90, 65.00, 'Listo'),
+  createData('TRI1613', '11-06-2024', 'Tricot Fine S.A.', 22510, 19820, 2611, 2.40, 55.00, 'Detenido'),
+  createData('RCA0352', '12-06-2024', 'Textiles Roca E.I.R.L.', 22610, 19910, 2612, 2.20, 45.00, '-'),
+  createData('FRA1405', '13-06-2024', 'Textil Defranco E.I.R.L.', 22620, 19940, 2613, 3.00, 35.00, 'En curso'),
+  createData('TRI1614', '14-06-2024', 'Tricot Fine S.A.', 22630, 19850, 2614, 1.80, 25.00, 'Listo'),
+  createData('RCA0353', '15-06-2024', 'Textiles Roca E.I.R.L.', 22640, 19960, 2615, 1.70, 15.00, 'Detenido'),
+  createData('FRA1406', '16-06-2024', 'Textil Defranco E.I.R.L.', 22650, 19970, 2616, 3.10, 5.00, '-'),
+  createData('TRI1615', '17-06-2024', 'Tricot Fine S.A.', 22660, 19860, 2617, 1.60, 20.00, 'En curso'),
+  createData('RCA0354', '18-06-2024', 'Textiles Roca E.I.R.L.', 22670, 19930, 2618, 2.60, 30.00, 'Listo'),
+  createData('FRA1407', '19-06-2024', 'Textil Defranco E.I.R.L.', 22680, 19940, 2619, 1.50, 40.00, 'Detenido'),
+  createData('TRI1616', '20-06-2024', 'Tricot Fine S.A.', 22690, 19870, 2620, 1.40, 50.00, '-')
 ];
 
 export default function Tabla_stock_pendiente() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selected, setSelected] = React.useState<string | null>(null);
+  const [selected, setSelected] = React.useState<Record<string, boolean>>({});
   const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleClickOpen = () => setOpenDialog(true);
@@ -85,11 +101,18 @@ export default function Tabla_stock_pendiente() {
   
   const handleClose = () => setOpenDialog(false);
 
-  const isSelected = (order: string) => selected === order;
   const getSelectedRows = () => {
-    if (!selected) return [];
-    const row = rows.find((row) => row.order === selected);
-    return row ? [row] : [];
+    return Object.keys(selected)
+      .filter((key) => selected[key])
+      .map((key) => rows.find((row) => row.order === key)!)
+      .filter(Boolean)
+      .map((row) => ({
+        order: row.order,
+        textile: row.textile,
+        consumed: row.consumed,
+        programmed: row.programmed,
+        progress: row.progress
+      }));
   };
 
 
@@ -103,7 +126,7 @@ export default function Tabla_stock_pendiente() {
     setPage(0);
   };
 
-{/*  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.reduce((acc, row) => {
         acc[row.order] = true;
@@ -114,21 +137,22 @@ export default function Tabla_stock_pendiente() {
       setSelected({});
     }
   };
-*/}
 
-const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
-  // Si la fila ya está seleccionada, la deselecciona. De lo contrario, selecciona la nueva fila.
-  if (selected === order) {
-    setSelected(null);
-  } else {
-    setSelected(order);
-  }
-};
+  const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
+    const newSelected = { ...selected, [order]: !selected[order] };
+    if (newSelected[order]) {
+      setSelected(newSelected);
+    } else {
+      const remainingSelected = { ...newSelected };
+      delete remainingSelected[order];
+      setSelected(remainingSelected);
+    }
+  };
 
   const selectedRows = getSelectedRows();
   const isAnyOrderSelected = selectedRows.length > 0;
 
- 
+  const isSelected = (order: string) => !!selected[order];
 
   const getStateColor = (state: any) => {
     switch (state) {
@@ -151,7 +175,26 @@ const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-            <TableCell padding="normal" style={{ backgroundColor: 'rgb(20, 67, 131)'}}/>
+            <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)'}}>
+              <Checkbox
+                color="default" 
+                indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
+                checked={rows.length > 0 && Object.keys(selected).length === rows.length}
+                onChange={handleSelectAllClick}
+                sx={{
+                  color: 'white', // Color por defecto del icono
+                  '&.MuiCheckbox-root': { 
+                    color: 'white', // Color del borde del checkbox cuando no está seleccionado
+                  },
+                  '&.Mui-checked': { 
+                    color: 'white', // Color del checkbox cuando está seleccionado
+                  },
+                  '& .MuiSvgIcon-root': { 
+                    fill: 'white', // Color del interior del checkbox
+                  },
+                }}
+              />
+            </TableCell>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -197,14 +240,15 @@ const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
                             ...(column.id === 'state' ? { backgroundColor: stateColor, color: 'white' } : {}),
                           }}>
                           {column.id === 'progress' ? (
+                            // Se asegura de que el contexto en el que se usa value, se maneje como un número.
                             <Box display="flex" alignItems="center">
                               <Box width="100%" mr={1}>
-                              
+                                {/* Verifica que value sea realmente un número antes de usarlo */}
                                 <LinearProgress variant="determinate" value={typeof value === 'number' ? value : 0} />
                               </Box>
                               <Box minWidth={35}>
                                 <Typography variant="body2" color="textSecondary">
-                                
+                                  {/* Se convierte value a número para el texto, si no es un número se usa 0 */}
                                   {`${Math.round(typeof value === 'number' ? value : 0)}%`}
                                 </Typography>
                               </Box>
@@ -236,7 +280,7 @@ const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
           <Box sx={{ flex: '1 1 auto' }}> 
           
             <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
+              rowsPerPageOptions={[10, 25, 50]}
               component="div"
               count={rows.length}
               rowsPerPage={rowsPerPage}
