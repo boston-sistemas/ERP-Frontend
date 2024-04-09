@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AlertaCerradoStock from './alertas/alerta_cerrado_stock';
 import { rows } from './data/data_pendiente';
+import Collapse from '@mui/material/Collapse';
 
 
 
@@ -100,14 +101,9 @@ export default function Tabla_stock_pendiente() {
     }
   };
 
-  const [open, setOpen] = React.useState(false);
 
-  const selectedRows = getSelectedRows();
-  const isAnyOrderSelected = selectedRows.length > 0;
-
-  const isSelected = (order: string) => !!selected[order];
-
-  const handleToggleSubOrder = (order: string) => {
+  const handleToggleSubOrder = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, order: string) => {
+    event.stopPropagation();
     setOpenSubOrders(prev => ({ ...prev, [order]: !prev[order] }));
   };
   
@@ -129,7 +125,7 @@ export default function Tabla_stock_pendiente() {
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
+        <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)' }}>
@@ -158,125 +154,110 @@ export default function Tabla_stock_pendiente() {
             </TableRow>
           </TableHead>
           <TableBody>
-  {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-    const isItemSelected = !!selected[row.order];
-    return (
-      <React.Fragment key={row.order}>
-        <TableRow
-          hover
-          onClick={(event) => handleClick(event, row.order)}
-          role="checkbox"
-          aria-checked={isItemSelected}
-          tabIndex={-1}
-          key={row.order}
-          selected={isItemSelected}
-        >
-          <TableCell padding="checkbox">
-            <Checkbox
-              color="primary"
-              checked={isItemSelected}
-            />
-          </TableCell>
-          <TableCell component="th" scope="row">
-            {row.order}
-            <IconButton aria-label="expand row" size="small" onClick={() => handleToggleSubOrder(row.order)}>
-              {openSubOrders[row.order] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
-          </TableCell>
-          <TableCell align="center">{row.date}</TableCell>
-          <TableCell align="center">{row.textile}</TableCell>
-          <TableCell align="right">{row.programmed.toLocaleString('en-US')}</TableCell>
-          <TableCell align="right">{row.consumed.toLocaleString('en-US')}</TableCell>
-          <TableCell align="right">{row.remaining.toLocaleString('en-US')}</TableCell>
-          <TableCell align="right">{`${row.waste.toFixed(2)} %`}</TableCell>
-          <TableCell align="center">
-            <Box display="flex" alignItems="center">
-              <Box width="100%" mr={1}>
-                <LinearProgress variant="determinate" value={row.progress} />
-              </Box>
-              <Box minWidth={35}>
-                <Typography variant="body2" color="textSecondary">{`${Math.round(row.progress)}%`}</Typography>
-              </Box>
-            </Box>
-          </TableCell>
-          <TableCell align="center" style={{ backgroundColor: getStateColor(row.state), color: 'white' }}>
-            {row.state}
-          </TableCell>
-        </TableRow>
-        {openSubOrders[row.order] && (
-          <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
-              <Box margin={1}>
-                <Typography variant="h6" gutterBottom component="div">Subórdenes</Typography>
-                <Table size="small" aria-label="sub-orders">
-                  <TableHead>
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              const isItemSelected = !!selected[row.order];
+              const isRowExpanded = !!openSubOrders[row.order];
+              return (
+                <React.Fragment key={row.order}>
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.order)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.order}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                      />
+                    </TableCell>
+                    <TableCell  align="center" component="th" scope="row">
+                      {row.order}
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={(event) => handleToggleSubOrder(event, row.order)} // Pasar el evento al manejador
+                      >
+                        {openSubOrders[row.order] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">{row.date}</TableCell>
+                    <TableCell align="center">{row.textile}</TableCell>
+                    <TableCell align="center">{row.programmed.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.consumed.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.remaining.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{`${row.waste.toFixed(2)} %`}</TableCell>
+                    <TableCell align="center">
+                      <Box display="flex" alignItems="center">
+                        <Box width="100%" mr={1}>
+                          <LinearProgress variant="determinate" value={row.progress} />
+                        </Box>
+                        <Box minWidth={35}>
+                          <Typography variant="body2" color="textSecondary">{`${Math.round(row.progress)}%`}</Typography>
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center" style={{ backgroundColor: getStateColor(row.state), color: 'white' }}>
+                      {row.state}
+                    </TableCell>
+                  </TableRow>
+                  {openSubOrders[row.order] && (
                     <TableRow>
-                      <TableCell>Fecha</TableCell>
-                      <TableCell>Cliente</TableCell>
-                      <TableCell align="right">Cantidad</TableCell>
-                      <TableCell align="right">Precio Total</TableCell>
+                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+                        <Collapse in={isRowExpanded}  unmountOnExit>
+                          <Box margin={1}>
+                            <Table size="small" aria-label="sub-orders">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Fecha</TableCell>
+                                  <TableCell>Cliente</TableCell>
+                                  <TableCell align="center">Cantidad</TableCell>
+                                  <TableCell align="center">Precio Total</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {row.subOrders.map((subOrder, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell>{subOrder.date}</TableCell>
+                                    <TableCell>{subOrder.customer}</TableCell>
+                                    <TableCell align="center">{subOrder.amount}</TableCell>
+                                    <TableCell align="center">{subOrder.totalPrice}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Box>
+                        </Collapse>
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.subOrders.map((subOrder, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{subOrder.date}</TableCell>
-                        <TableCell>{subOrder.customer}</TableCell>
-                        <TableCell align="right">{subOrder.amount}</TableCell>
-                        <TableCell align="right">{subOrder.totalPrice}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Box>
-            </TableCell>
-          </TableRow>
-        )}
-      </React.Fragment>
-    );
-  })}
-</TableBody>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </TableBody>
         </Table>
       </TableContainer>
-
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap', 
-        }}>
-          <Button 
-            variant="contained"
-            className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out"
-            onClick={handleClickOpen}
-          >
-            Cerrar
-          </Button>
-          <Box sx={{ flex: '1 1 auto' }}> 
-          
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 50]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              className="mt-0"
-            />
-          </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={handleClickOpen}>
+          Cerrar
+        </Button>
+        <Box sx={{ flex: '1 1 auto' }}>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            className="mt-0"
+          />
         </Box>
-
-
-    {/*ALERTA POPUP*/}
-    {/* Dialog */}
-
-    <AlertaCerradoStock
-    open={openDialog}
-    onClose={handleClose}
-    selectedRows={getSelectedRows()} 
-    />
+      </Box>
+      <AlertaCerradoStock open={openDialog} onClose={handleClose} selectedRows={getSelectedRows()} />
     </Paper>
-
   );
 }
