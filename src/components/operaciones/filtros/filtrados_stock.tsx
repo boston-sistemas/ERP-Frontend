@@ -66,6 +66,7 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
           >
             <MenuItem value={'Tricot Fine S.A.'}>Tricot Fine S.A.</MenuItem>
             <MenuItem value={'Textil Defranco E.I.R.L'}>Textil Defranco E.I.R.L</MenuItem>
+            <MenuItem value={'Textiles Roca E.I.R.L'}>Textiles Roca E.I.R.L</MenuItem>
             {/* Etc... */}
           </Select>
         </FormControl>

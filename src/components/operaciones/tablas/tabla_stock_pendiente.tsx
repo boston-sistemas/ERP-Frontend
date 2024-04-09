@@ -272,7 +272,7 @@ export default function Tabla_stock_pendiente() {
         }}>
           <Button 
             variant="contained"
-            className="mt-4 mb-4 ml-4 w-50 bg-gray-700 text-white py-1 rounded hover:bg-black transition duration-300 ease-in-out"
+            className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out"
             onClick={handleClickOpen}
           >
             Cerrar
@@ -326,7 +326,7 @@ export default function Tabla_stock_pendiente() {
         ) : (
           <>
             <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
-              ¿Estás seguro de <strong>cerrar</strong> esta orden?
+              ¿Estás seguro de <strong>CERRAR</strong> estas ordenes?
             </Typography>
             <Box sx={{ overflowX: 'auto' }}>
               <Table size="small" sx={{ margin: 'auto', maxWidth: '700px' }}> 

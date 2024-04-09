@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Button, Typography } from '@mui/material';
+import { Button, Switch, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
@@ -17,12 +17,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import LinearProgress from '@mui/material/LinearProgress';
+
 
 
 
 interface Column {
-  id: 'order' | 'date' | 'textile' | 'programmed' | 'consumed' | 'remaining' | 'waste' | 'progress' | 'state';
+  id: 'order' | 'date' | 'textile' | 'programmed' | 'consumed' | 'remaining' | 'waste' | 'pick';
   label: string;
   minWidth?: number;
   align?: 'right' | 'left' | 'center';
@@ -37,8 +37,7 @@ const columns: readonly Column[] = [
   { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'progress', label: 'Progreso', minWidth: 120, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'state', label: 'Estado', minWidth: 100, align: 'center' },
+  { id: 'pick', label: 'Saldo Recogido', minWidth: 100, align: 'center' },
 ];
 
 interface Data {
@@ -49,8 +48,7 @@ interface Data {
   consumed: number;
   remaining: number;
   waste: number;
-  progress: number;
-  state: string;
+  pick: boolean;
 }
 
 function createData(
@@ -61,33 +59,32 @@ function createData(
   consumed: number,
   remaining: number,
   waste: number,
-  progress: number,
-  state: string,
+  pick: boolean,
 ): Data {
-  return { order, date, textile, programmed, consumed, remaining, waste, progress, state};
+  return { order, date, textile, programmed, consumed, remaining, waste,pick};
 }
 
 const rows = [
-  createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 10.00, 'En curso'),
-  createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 22560, 19830, 2630, 2.50, 60.00, 'Listo'),
-  createData('RCA0349', '03-06-2024', 'Textiles Roca E.I.R.L.', 22570, 19900, 2650, 2.00, 40.00, 'Detenido'),
-  createData('FRA1402', '04-06-2024', 'Textil Defranco E.I.R.L.', 22580, 19950, 2600, 2.80, 90.00, '-'),
-  createData('TRI1610', '05-06-2024', 'Tricot Fine S.A.', 22590, 19880, 2610, 2.30, 85.00, 'En curso'),
-  createData('FRA1403', '06-06-2024', 'Textil Defranco E.I.R.L.', 22540, 19870, 2640, 2.60, 70.00, 'Listo'),
-  createData('RCA0350', '07-06-2024', 'Textiles Roca E.I.R.L.', 22550, 19920, 2660, 1.90, 50.00, 'Detenido'),
-  createData('TRI1612', '08-06-2024', 'Tricot Fine S.A.', 22600, 19980, 2670, 2.70, 95.00, '-'),
-  createData('RCA0351', '09-06-2024', 'Textiles Roca E.I.R.L.', 22520, 19840, 2680, 2.10, 75.00, 'En curso'),
-  createData('FRA1404', '10-06-2024', 'Textil Defranco E.I.R.L.', 22530, 19890, 2690, 2.90, 65.00, 'Listo'),
-  createData('TRI1613', '11-06-2024', 'Tricot Fine S.A.', 22510, 19820, 2611, 2.40, 55.00, 'Detenido'),
-  createData('RCA0352', '12-06-2024', 'Textiles Roca E.I.R.L.', 22610, 19910, 2612, 2.20, 45.00, '-'),
-  createData('FRA1405', '13-06-2024', 'Textil Defranco E.I.R.L.', 22620, 19940, 2613, 3.00, 35.00, 'En curso'),
-  createData('TRI1614', '14-06-2024', 'Tricot Fine S.A.', 22630, 19850, 2614, 1.80, 25.00, 'Listo'),
-  createData('RCA0353', '15-06-2024', 'Textiles Roca E.I.R.L.', 22640, 19960, 2615, 1.70, 15.00, 'Detenido'),
-  createData('FRA1406', '16-06-2024', 'Textil Defranco E.I.R.L.', 22650, 19970, 2616, 3.10, 5.00, '-'),
-  createData('TRI1615', '17-06-2024', 'Tricot Fine S.A.', 22660, 19860, 2617, 1.60, 20.00, 'En curso'),
-  createData('RCA0354', '18-06-2024', 'Textiles Roca E.I.R.L.', 22670, 19930, 2618, 2.60, 30.00, 'Listo'),
-  createData('FRA1407', '19-06-2024', 'Textil Defranco E.I.R.L.', 22680, 19940, 2619, 1.50, 40.00, 'Detenido'),
-  createData('TRI1616', '20-06-2024', 'Tricot Fine S.A.', 22690, 19870, 2620, 1.40, 50.00, '-')
+  createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, true),
+  createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 22560, 19830, 2630, 2.50, true),
+  createData('RCA0349', '03-06-2024', 'Textiles Roca E.I.R.L.', 22570, 19900, 2650, 2.00, false),
+  createData('FRA1402', '04-06-2024', 'Textil Defranco E.I.R.L.', 22580, 19950, 2600, 2.80,true),
+  createData('TRI1610', '05-06-2024', 'Tricot Fine S.A.', 22590, 19880, 2610, 2.30, false),
+  createData('FRA1403', '06-06-2024', 'Textil Defranco E.I.R.L.', 22540, 19870, 2640, 2.60, false),
+  createData('RCA0350', '07-06-2024', 'Textiles Roca E.I.R.L.', 22550, 19920, 2660, 1.90, false),
+  createData('TRI1612', '08-06-2024', 'Tricot Fine S.A.', 22600, 19980, 2670, 2.70, false),
+  createData('RCA0351', '09-06-2024', 'Textiles Roca E.I.R.L.', 22520, 19840, 2680, 2.10, false),
+  createData('FRA1404', '10-06-2024', 'Textil Defranco E.I.R.L.', 22530, 19890, 2690, 2.90, false),
+  createData('TRI1613', '11-06-2024', 'Tricot Fine S.A.', 22510, 19820, 2611, 2.40, true),
+  createData('RCA0352', '12-06-2024', 'Textiles Roca E.I.R.L.', 22610, 19910, 2612, 2.20, true),
+  createData('FRA1405', '13-06-2024', 'Textil Defranco E.I.R.L.', 22620, 19940, 2613, 3.00, true),
+  createData('TRI1614', '14-06-2024', 'Tricot Fine S.A.', 22630, 19850, 2614, 1.80, false),
+  createData('RCA0353', '15-06-2024', 'Textiles Roca E.I.R.L.', 22640, 19960, 2615, 1.70, false),
+  createData('FRA1406', '16-06-2024', 'Textil Defranco E.I.R.L.', 22650, 19970, 2616, 3.10, false),
+  createData('TRI1615', '17-06-2024', 'Tricot Fine S.A.', 22660, 19860, 2617, 1.60, true),
+  createData('RCA0354', '18-06-2024', 'Textiles Roca E.I.R.L.', 22670, 19930, 2618, 2.60, true),
+  createData('FRA1407', '19-06-2024', 'Textil Defranco E.I.R.L.', 22680, 19940, 2619, 1.50, false),
+  createData('TRI1616', '20-06-2024', 'Tricot Fine S.A.', 22690, 19870, 2620, 1.40, false)
 ];
 
 export default function Tabla_stock_pendiente() {
@@ -95,11 +92,28 @@ export default function Tabla_stock_pendiente() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selected, setSelected] = React.useState<Record<string, boolean>>({});
   const [openDialog, setOpenDialog] = React.useState(false);
-
+  const [switchStates, setSwitchStates] = React.useState<Record<string, boolean>>({});
   const handleClickOpen = () => setOpenDialog(true);
 
   
   const handleClose = () => setOpenDialog(false);
+
+  
+
+  React.useEffect(() => {
+    const initialSwitchStates = rows.reduce((acc, row) => {
+      acc[row.order] = row.pick;
+      return acc;
+    }, {} as Record<string, boolean>); 
+    setSwitchStates(initialSwitchStates);
+  }, []);
+
+  const handleSwitchChange = (order: string | number) => {
+    setSwitchStates(prev => ({
+      ...prev,
+      [order]: !prev[order]
+    }));
+  };
 
   const getSelectedRows = () => {
     return Object.keys(selected)
@@ -111,7 +125,7 @@ export default function Tabla_stock_pendiente() {
         textile: row.textile,
         consumed: row.consumed,
         programmed: row.programmed,
-        progress: row.progress
+        pick: row.pick,
       }));
   };
 
@@ -154,20 +168,6 @@ export default function Tabla_stock_pendiente() {
 
   const isSelected = (order: string) => !!selected[order];
 
-  const getStateColor = (state: any) => {
-    switch (state) {
-      case '-':
-        return '#9C9DA1';
-      case 'Detenido':
-        return '#DD2E44';
-      case 'En curso':
-        return '#FFC225';
-      case 'Listo':
-        return '#3EC564';
-      default:
-        return 'none';
-    }
-  };
 
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px'}}>
@@ -196,6 +196,7 @@ export default function Tabla_stock_pendiente() {
               />
             </TableCell>
               {columns.map((column) => (
+                
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -211,7 +212,7 @@ export default function Tabla_stock_pendiente() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 const isItemSelected = isSelected(row.order);
-                const stateColor = getStateColor(row.state);
+             
                 return (
                   <TableRow
                     hover
@@ -230,31 +231,20 @@ export default function Tabla_stock_pendiente() {
                     </TableCell>
                     {columns.map((column) => {
                       const value = row[column.id];
-
                       return (
                         <TableCell 
                           key={column.id} 
                           align={column.align} 
-                          style={{
-                            minWidth: column.minWidth,
-                            ...(column.id === 'state' ? { backgroundColor: stateColor, color: 'white' } : {}),
-                          }}>
-                          {column.id === 'progress' ? (
-                            // Se asegura de que el contexto en el que se usa value, se maneje como un número.
-                            <Box display="flex" alignItems="center">
-                              <Box width="100%" mr={1}>
-                                {/* Verifica que value sea realmente un número antes de usarlo */}
-                                <LinearProgress variant="determinate" value={typeof value === 'number' ? value : 0} />
-                              </Box>
-                              <Box minWidth={35}>
-                                <Typography variant="body2" color="textSecondary">
-                                  {/* Se convierte value a número para el texto, si no es un número se usa 0 */}
-                                  {`${Math.round(typeof value === 'number' ? value : 0)}%`}
-                                </Typography>
-                              </Box>
-                            </Box>
-                          ) : column.format && value !== null && value !== undefined ? column.format(value) : value}
-                        </TableCell>
+                          style={{ minWidth: column.minWidth }}>
+                          {column.id === 'pick' ? (
+                            <Switch
+                              checked={switchStates[row.order] || false}
+                              onClick={(event) => event.stopPropagation()} 
+                              onChange={() => handleSwitchChange(row.order)} 
+                              inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                          ) : (column.format && value !== null && value !== undefined ? column.format(value) : value)}
+                      </TableCell>
                       );
                     })}
                   </TableRow>
@@ -272,10 +262,10 @@ export default function Tabla_stock_pendiente() {
         }}>
           <Button 
             variant="contained"
-            className="mt-4 mb-4 ml-4 w-50 bg-gray-700 text-white py-1 rounded hover:bg-black transition duration-300 ease-in-out"
+            className="mt-4 mb-4 ml-4 w-50 bg-red-700 text-white py-1 rounded hover:bg-red-500 transition duration-300 ease-in-out"
             onClick={handleClickOpen}
           >
-            Cerrar
+            Liquidar
           </Button>
           <Box sx={{ flex: '1 1 auto' }}> 
           
@@ -287,7 +277,7 @@ export default function Tabla_stock_pendiente() {
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
-              className="mt-0"
+              className="mt-0"           
             />
           </Box>
         </Box>
@@ -300,11 +290,11 @@ export default function Tabla_stock_pendiente() {
       open={openDialog}
       onClose={handleClose}
       PaperProps={{
-        style: { borderRadius: 8, overflow: 'hidden', maxWidth: '680px', width: '100%' }, // Ajusta el ancho aquí
+        style: { borderRadius: 8, overflow: 'hidden', maxWidth: '680px', width: '100%' }, // Ajustar ancho popup
       }}
     >
       <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-        <ErrorOutlineIcon color="warning" sx={{ fontSize: '10rem', top: 10, left: 'calc(50% - 20px)' }} />
+        <ErrorOutlineIcon color="error" sx={{ fontSize: '10rem', top: 10, left: 'calc(50% - 20px)' }} />
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -326,32 +316,30 @@ export default function Tabla_stock_pendiente() {
         ) : (
           <>
             <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
-              ¿Estás seguro de <strong>cerrar</strong> esta orden?
+              ¿Estás seguro de <strong>LIQUIDAR</strong> estas órdenes?
             </Typography>
-            <Box sx={{ overflowX: 'auto' }}>
-              <Table size="small" sx={{ margin: 'auto', maxWidth: '700px' }}> 
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Orden</TableCell>
-                    <TableCell align="center">Tejeduría</TableCell>
-                    <TableCell align="center">Consumido (kg)</TableCell>
-                    <TableCell align="center">Programado (kg)</TableCell>
-                    <TableCell align="center">Progreso (%)</TableCell>
+            <Table size="small" sx={{ margin: 'auto', maxWidth: '700px' }}> 
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Orden</TableCell>
+                  <TableCell align="center">Tejeduría</TableCell>
+                  <TableCell align="center">Consumido (kg)</TableCell>
+                  <TableCell align="center">Programado (kg)</TableCell>
+                  <TableCell align="center">Saldo Recogido</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {getSelectedRows().map((row) => (
+                  <TableRow key={row.order}>
+                    <TableCell align="center">{row.order}</TableCell>
+                    <TableCell align="center">{row.textile}</TableCell>
+                    <TableCell align="center">{row.consumed}</TableCell>
+                    <TableCell align="center">{row.programmed}</TableCell>
+                    <TableCell align="center">{row.pick ? 'Sí' : 'No'}</TableCell> 
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {getSelectedRows().map((row) => (
-                    <TableRow key={row.order}>
-                      <TableCell align="center">{row.order}</TableCell>
-                      <TableCell align="center">{row.textile}</TableCell>
-                      <TableCell align="center">{row.consumed}</TableCell>
-                      <TableCell align="center">{row.programmed}</TableCell>
-                      <TableCell align="center">{row.progress.toFixed(2)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
+                ))}
+              </TableBody>
+            </Table>
           </>
         )}
       </DialogContent>
