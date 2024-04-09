@@ -94,7 +94,13 @@ export default function Tabla_stock_pendiente() {
 
   const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
     const newSelected = { ...selected, [order]: !selected[order] };
-    setSelected(newSelected);
+    if (newSelected[order]) {
+      setSelected(newSelected);
+    } else {
+      const remainingSelected = { ...newSelected };
+      delete remainingSelected[order];
+      setSelected(remainingSelected);
+    }
   };
 
   const handleToggleSubOrder = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, order: string) => {
@@ -126,7 +132,7 @@ export default function Tabla_stock_pendiente() {
         <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)' }}>
+              <TableCell align="center" padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)' }}>
                 <Checkbox
                   color="default"
                   indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
@@ -143,7 +149,7 @@ export default function Tabla_stock_pendiente() {
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
-                  align={column.align}
+                  align="center"
                   style={{ backgroundColor: 'rgb(20, 67, 131)', color: 'white', minWidth: column.minWidth }}
                 >
                   {column.label}
@@ -205,33 +211,55 @@ export default function Tabla_stock_pendiente() {
                       {row.state}
                     </TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length + 1}>
-                      <Collapse in={isRowExpanded} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
-                          <Table size="small" aria-label="sub-orders">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">Fecha</TableCell>
-                                <TableCell align="center">Cliente</TableCell>
-                                <TableCell align="center">Cantidad</TableCell>
-                                <TableCell align="center">Precio Total</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {row.subOrders.map((subOrder, index) => (
-                                <TableRow key={index}>
-                                  <TableCell align="center">{subOrder.date}</TableCell>
-                                  <TableCell align="center">{subOrder.customer}</TableCell>
-                                  <TableCell align="center">{subOrder.amount}</TableCell>
-                                  <TableCell align="center">{subOrder.totalPrice}</TableCell>
+                  <TableRow >
+                    
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0}} colSpan={columns.length + 2}> {/* Ajusta el colspan */}
+                        <Collapse in={isRowExpanded} timeout="auto" unmountOnExit sx={{ width: 'calc(100% + 1px)' }}>
+                          <Box margin={0}>
+                            <Table  aria-label="sub-orders">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell align="center">Suborden</TableCell>
+                                  <TableCell align="center">Fecha</TableCell>
+                                  <TableCell align="center">Tejeduria</TableCell>
+                                  <TableCell align="center">Programado (kg)</TableCell>
+                                  <TableCell align="center">Consumido (kg)</TableCell>
+                                  <TableCell align="center">Restante (kg)</TableCell>
+                                  <TableCell align="center">Merma</TableCell>
+                                  <TableCell align="center">Progreso</TableCell>
+                                  <TableCell align="center">Estado</TableCell>
                                 </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </Box>
-                      </Collapse>
-                    </TableCell>
+                              </TableHead>
+                              <TableBody>
+                                {row.subOrders.map((subOrder, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell align="center">{subOrder.suborder}</TableCell>
+                                    <TableCell align="center">{subOrder.date}</TableCell>
+                                    <TableCell align="center">{subOrder.textile}</TableCell>
+                                    <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
+                                    <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
+                                    <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
+                                    <TableCell align="center">{`${subOrder.waste.toFixed(2)} %`}</TableCell>
+                                    <TableCell align="center">
+                                      <Box display="flex" alignItems="center">
+                                        <Box width="100%" mr={1}>
+                                          <LinearProgress variant="determinate" value={subOrder.progress} />
+                                        </Box>
+                                        <Box minWidth={35}>
+                                          <Typography variant="body2" color="textSecondary">{`${Math.round(subOrder.progress)}%`}</Typography>
+                                        </Box>
+                                      </Box>
+                                    </TableCell>
+                                    <TableCell align="center" style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}>
+                                      {subOrder.state}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Box>
+                        </Collapse>
+                      </TableCell>        
                   </TableRow>
                 </React.Fragment>
               );
