@@ -41,6 +41,8 @@ const columns: readonly Column[] = [
 ];
 
 
+
+
 export default function Tabla_stock_pendiente() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -92,20 +94,16 @@ export default function Tabla_stock_pendiente() {
 
   const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
     const newSelected = { ...selected, [order]: !selected[order] };
-    if (newSelected[order]) {
-      setSelected(newSelected);
-    } else {
-      const remainingSelected = { ...newSelected };
-      delete remainingSelected[order];
-      setSelected(remainingSelected);
-    }
+    setSelected(newSelected);
   };
-
 
   const handleToggleSubOrder = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, order: string) => {
-    event.stopPropagation();
-    setOpenSubOrders(prev => ({ ...prev, [order]: !prev[order] }));
-  };
+  event.stopPropagation();
+  setOpenSubOrders(prev => ({
+    ...prev,
+    [order]: !prev[order] // Cambiar el valor directamente sin depender del estado anterior
+  }));
+};
   
   const getStateColor = (state: any) => {
     switch (state) {
@@ -177,12 +175,15 @@ export default function Tabla_stock_pendiente() {
                     <TableCell  align="center" component="th" scope="row">
                       {row.order}
                       <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={(event) => handleToggleSubOrder(event, row.order)} // Pasar el evento al manejador
-                      >
-                        {openSubOrders[row.order] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                      </IconButton>
+                      aria-label="expand row"
+                      size="small"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleToggleSubOrder(event, row.order);
+                      }}
+                    >
+                      {openSubOrders[row.order] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    </IconButton>
                     </TableCell>
                     <TableCell align="center">{row.date}</TableCell>
                     <TableCell align="center">{row.textile}</TableCell>
@@ -204,36 +205,34 @@ export default function Tabla_stock_pendiente() {
                       {row.state}
                     </TableCell>
                   </TableRow>
-                  {openSubOrders[row.order] && (
-                    <TableRow>
-                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
-                        <Collapse in={isRowExpanded}  unmountOnExit>
-                          <Box margin={1}>
-                            <Table size="small" aria-label="sub-orders">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Fecha</TableCell>
-                                  <TableCell>Cliente</TableCell>
-                                  <TableCell align="center">Cantidad</TableCell>
-                                  <TableCell align="center">Precio Total</TableCell>
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columns.length + 1}>
+                      <Collapse in={isRowExpanded} timeout="auto" unmountOnExit>
+                        <Box margin={1}>
+                          <Table size="small" aria-label="sub-orders">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="center">Fecha</TableCell>
+                                <TableCell align="center">Cliente</TableCell>
+                                <TableCell align="center">Cantidad</TableCell>
+                                <TableCell align="center">Precio Total</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {row.subOrders.map((subOrder, index) => (
+                                <TableRow key={index}>
+                                  <TableCell align="center">{subOrder.date}</TableCell>
+                                  <TableCell align="center">{subOrder.customer}</TableCell>
+                                  <TableCell align="center">{subOrder.amount}</TableCell>
+                                  <TableCell align="center">{subOrder.totalPrice}</TableCell>
                                 </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {row.subOrders.map((subOrder, index) => (
-                                  <TableRow key={index}>
-                                    <TableCell>{subOrder.date}</TableCell>
-                                    <TableCell>{subOrder.customer}</TableCell>
-                                    <TableCell align="center">{subOrder.amount}</TableCell>
-                                    <TableCell align="center">{subOrder.totalPrice}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  )}
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
                 </React.Fragment>
               );
             })}
