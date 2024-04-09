@@ -274,7 +274,7 @@ export default function Tabla_stock_pendiente() {
     <AlertaCerradoStock
     open={openDialog}
     onClose={handleClose}
-    selectedRows={getSelectedRows()} // Asegúrate de ajustar esto según cómo manejas las filas seleccionadas
+    selectedRows={getSelectedRows()} 
     />
     </Paper>
 

@@ -5,10 +5,10 @@ import React, { useState } from 'react';
 import Sidebar from '../../../components/sidebar';
 import UserBanner from '@/components/banner_usuario';
 import { usePathname } from 'next/navigation';
-import Filtrador from '@/components/operaciones/filtros/filtrados_stock';
-import Tabla_stock_pendiente from '@/components/operaciones/tablas/tabla_stock_pendiente';
+import Filtrador from '@/components/operaciones/modulo1/filtros/filtrados_stock';
+import Tabla_stock_pendiente from '@/components/operaciones/modulo1/tablas/tabla_stock_pendiente';
 import Typography from '@mui/material/Typography';
-import Tabla_stock_cerrado from '@/components/operaciones/tablas/tabla_stock_cerrado';
+import Tabla_stock_cerrado from '@/components/operaciones/modulo1/tablas/tabla_stock_cerrado';
 
 
 
