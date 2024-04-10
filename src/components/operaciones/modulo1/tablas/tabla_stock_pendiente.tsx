@@ -37,7 +37,7 @@ const columns: readonly Column[] = [
   { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
   { id: 'progress', label: 'Progreso', minWidth: 120, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'state', label: 'Estado', minWidth: 100, align: 'center' },
+  { id: 'state', label: 'Estado', minWidth: 110, align: 'center' },
 ];
 
 
@@ -213,12 +213,14 @@ export default function Tabla_stock_pendiente() {
                   </TableRow>
                   <TableRow >
                     
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0}} colSpan={columns.length + 2}> {/* Ajusta el colspan */}
-                        <Collapse in={isRowExpanded} timeout="auto" unmountOnExit sx={{ width: 'calc(100% + 1px)' }}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 0.6, paddingLeft:0}} colSpan={columns.length + 2}> {/* Ajusta el colspan */}
+                        <Collapse in={isRowExpanded} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                           <Box margin={0}>
-                            <Table  aria-label="sub-orders">
+                            <Table  size="small" aria-label="sub-orders">
                               <TableHead>
                                 <TableRow>
+                                  <TableCell padding="checkbox"> 
+                                  </TableCell>  
                                   <TableCell align="center">Suborden</TableCell>
                                   <TableCell align="center">Fecha</TableCell>
                                   <TableCell align="center">Tejeduria</TableCell>
@@ -233,6 +235,7 @@ export default function Tabla_stock_pendiente() {
                               <TableBody>
                                 {row.subOrders.map((subOrder, index) => (
                                   <TableRow key={index}>
+                                    <TableCell padding="checkbox"></TableCell>
                                     <TableCell align="center">{subOrder.suborder}</TableCell>
                                     <TableCell align="center">{subOrder.date}</TableCell>
                                     <TableCell align="center">{subOrder.textile}</TableCell>
@@ -250,7 +253,7 @@ export default function Tabla_stock_pendiente() {
                                         </Box>
                                       </Box>
                                     </TableCell>
-                                    <TableCell align="center" style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}>
+                                    <TableCell  align="center" style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}>
                                       {subOrder.state}
                                     </TableCell>
                                   </TableRow>

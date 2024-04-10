@@ -41,6 +41,7 @@ export interface SubOrder {
   export const rows = [
     createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, 10.00, 'En curso', [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, remaining: 2628, waste: 2.34, progress: 10.00, state: 'En curso'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, remaining: 2628, waste: 2.34, progress: 10.00, state: 'En curso'}
     ]),
     createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 22560, 19830, 2630, 2.50, 60.00, 'Listo'),
     createData('RCA0349', '03-06-2024', 'Textiles Roca E.I.R.L.', 22570, 19900, 2650, 2.00, 40.00, 'En curso'),
