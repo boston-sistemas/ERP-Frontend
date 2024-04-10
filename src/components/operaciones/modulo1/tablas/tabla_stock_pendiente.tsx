@@ -128,7 +128,7 @@ export default function Tabla_stock_pendiente() {
 
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 600 }}>
         <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
@@ -213,17 +213,15 @@ export default function Tabla_stock_pendiente() {
                   </TableRow>
                   <TableRow >
                     
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 0.6, paddingLeft:0}} colSpan={columns.length + 2}> {/* Ajusta el colspan */}
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}> {/* Ajusta el colspan */}
                         <Collapse in={isRowExpanded} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
-                          <Box margin={0}>
+                          <Box margin={1}>
                             <Table  size="small" aria-label="sub-orders">
                               <TableHead>
                                 <TableRow>
                                   <TableCell padding="checkbox"> 
                                   </TableCell>  
                                   <TableCell align="center">Suborden</TableCell>
-                                  <TableCell align="center">Fecha</TableCell>
-                                  <TableCell align="center">Tejeduria</TableCell>
                                   <TableCell align="center">Programado (kg)</TableCell>
                                   <TableCell align="center">Consumido (kg)</TableCell>
                                   <TableCell align="center">Restante (kg)</TableCell>
@@ -237,8 +235,6 @@ export default function Tabla_stock_pendiente() {
                                   <TableRow key={index}>
                                     <TableCell padding="checkbox"></TableCell>
                                     <TableCell align="center">{subOrder.suborder}</TableCell>
-                                    <TableCell align="center">{subOrder.date}</TableCell>
-                                    <TableCell align="center">{subOrder.textile}</TableCell>
                                     <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
                                     <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
                                     <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
