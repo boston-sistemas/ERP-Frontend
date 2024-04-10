@@ -15,32 +15,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AlertaCerradoStock from './alertas/alerta_cerrado_stock';
-import { rows } from './data/data_pendiente';
+import { rows, columns} from './data/data_pendiente';
 import Collapse from '@mui/material/Collapse';
-
-
-
-interface Column {
-  id: 'order' | 'date' | 'textile' | 'programmed' | 'consumed' | 'remaining' | 'waste' | 'progress' | 'state';
-  label: string;
-  minWidth?: number;
-  align?: 'right' | 'left' | 'center';
-  format?: (value: any) => string;
-}
-
-const columns: readonly Column[] = [
-  { id: 'order', label: 'Orden', minWidth: 100, align: 'center' },
-  { id: 'date', label: 'Fecha', minWidth: 100, align: 'center' },
-  { id: 'textile', label: 'Tejeduría', minWidth: 130, align: 'center' },
-  { id: 'programmed', label: 'Programado (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
-  { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
-  { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
-  { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'progress', label: 'Progreso', minWidth: 120, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'state', label: 'Estado', minWidth: 110, align: 'center' },
-];
-
-
 
 
 export default function Tabla_stock_pendiente() {
@@ -204,6 +180,7 @@ export default function Tabla_stock_pendiente() {
                         </Box>
                         <Box minWidth={35}>
                           <Typography variant="body2" color="textSecondary">{`${Math.round(row.progress)}%`}</Typography>
+                          {/*<Typography variant="body2" color="textSecondary">{`${row.progress.toFixed(1)}%`}</Typography>*/}
                         </Box>
                       </Box>
                     </TableCell>
@@ -245,7 +222,8 @@ export default function Tabla_stock_pendiente() {
                                           <LinearProgress variant="determinate" value={subOrder.progress} />
                                         </Box>
                                         <Box minWidth={35}>
-                                          <Typography variant="body2" color="textSecondary">{`${Math.round(subOrder.progress)}%`}</Typography>
+                                          {/*<Typography variant="body2" color="textSecondary">{`${Math.round(subOrder.progress)}%`}</Typography>*/}
+                                          <Typography variant="body2" color="textSecondary">{`${subOrder.progress.toFixed(1)}%`}</Typography>
                                         </Box>
                                       </Box>
                                     </TableCell>
@@ -280,6 +258,8 @@ export default function Tabla_stock_pendiente() {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             className="mt-0"
+            labelRowsPerPage="Filas por página:"
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}
           />
         </Box>
       </Box>
