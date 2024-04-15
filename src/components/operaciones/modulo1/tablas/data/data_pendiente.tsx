@@ -79,22 +79,22 @@ interface Column {
 }
 
 export const columns: readonly Column[] = [
-  { id: 'order', label: 'Orden', minWidth: 100, align: 'center' },
-  { id: 'date', label: 'Fecha', minWidth: 100, align: 'center' },
-  { id: 'textile', label: 'Tejeduría', minWidth: 130, align: 'center' },
-  { id: 'programmed', label: 'Programado (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
-  { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'order', label: 'Orden', minWidth: 130, align: 'center' },
+  { id: 'date', label: 'Fecha', minWidth: 110, align: 'center' },
+  { id: 'textile', label: 'Tejeduría', minWidth: 135, align: 'center' },
+  { id: 'programmed', label: 'Programado (kg)', minWidth: 140, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'consumed', label: 'Consumido (kg)', minWidth: 140, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'progress', label: 'Progreso', minWidth: 120, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-  { id: 'state', label: 'Estado', minWidth: 110, align: 'center' },
+  { id: 'progress', label: 'Progreso', minWidth: 140, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
+  { id: 'state', label: 'Estado', minWidth: 130, align: 'center' },
 ];
   
 
   export const rows = [
     createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 'En curso', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 22500, state: 'En curso'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 20000, consumed: 19900, state: 'En curso'}
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 22500, state: 'Listo'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 20000, consumed: 19900, state: 'Listo'}
     ]),
     createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 'Listo', [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},

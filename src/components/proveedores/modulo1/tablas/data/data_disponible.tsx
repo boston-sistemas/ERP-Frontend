@@ -83,15 +83,15 @@ export interface SubOrder {
   }
   
   export const columns: readonly Column[] = [
-    { id: 'order', label: 'Orden', minWidth: 110, align: 'center' },
+    { id: 'order', label: 'Orden', minWidth: 129, align: 'center' },
     { id: 'date', label: 'Fecha', minWidth: 110, align: 'center' },
 
-    { id: 'programmed', label: 'Programado (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
-    { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+    { id: 'programmed', label: 'Programado (kg)', minWidth: 140, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+    { id: 'consumed', label: 'Consumido (kg)', minWidth: 140, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
     { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
     { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
     { id: 'progress', label: 'Progreso', minWidth: 130, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
-    { id: 'state', label: 'Estado', minWidth: 110, align: 'center' },
+    { id: 'state', label: 'Estado', minWidth: 130, align: 'center' },
   ];
     
   

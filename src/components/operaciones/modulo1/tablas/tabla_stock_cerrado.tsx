@@ -30,11 +30,11 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'order', label: 'Orden', minWidth: 100, align: 'center' },
-  { id: 'date', label: 'Fecha', minWidth: 100, align: 'center' },
+  { id: 'order', label: 'Orden', minWidth: 120, align: 'center' },
+  { id: 'date', label: 'Fecha', minWidth: 110, align: 'center' },
   { id: 'textile', label: 'Tejeduría', minWidth: 130, align: 'center' },
-  { id: 'programmed', label: 'Programado (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
-  { id: 'consumed', label: 'Consumido (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'programmed', label: 'Programado (kg)', minWidth: 140, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
+  { id: 'consumed', label: 'Consumido (kg)', minWidth: 140, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'remaining', label: 'Restante (kg)', minWidth: 130, align: 'center', format: (value: number) => value.toLocaleString('en-US') },
   { id: 'waste', label: 'Merma', minWidth: 100, align: 'center', format: (value: number) => `${value.toFixed(2)} %` },
   { id: 'pick', label: 'Saldo Recogido', minWidth: 100, align: 'center' },
