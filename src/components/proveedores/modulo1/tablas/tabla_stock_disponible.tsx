@@ -118,7 +118,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
       <TableContainer sx={{ maxHeight: 600 }}>
-        <Table stickyHeader aria-label="collapsible table">
+        <Table  stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell align="center" padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)' }}>
@@ -222,16 +222,19 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}>
                       <Collapse in={!!openSubOrders[row.order]} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <Box margin={1}>
-                          <Table size="small" aria-label="sub-orders">
+                          <Table  size="small" aria-label="sub-orders">
                             <TableHead>
                               <TableRow>
                                 <TableCell padding="checkbox"></TableCell>
-                                <TableCell align="center">Suborden</TableCell>
+                                <TableCell align="center">Tejido</TableCell>
+                                <TableCell align="center">Ancho</TableCell>
+                                <TableCell align="center">Hilandería</TableCell>
                                 <TableCell align="center">Programado (kg)</TableCell>
                                 <TableCell align="center">Consumido (kg)</TableCell>
                                 <TableCell align="center">Restante (kg)</TableCell>
-                                <TableCell align="center">Merma</TableCell>
-                                <TableCell align="center">Progreso</TableCell>
+                                <TableCell align="center">Rollos</TableCell>
+                                <TableCell align="center">Peso (kg)</TableCell>
+                            
                                 <TableCell align="center">Estado</TableCell>
                               </TableRow>
                             </TableHead>
@@ -240,20 +243,14 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                                 <TableRow key={index}>
                                   <TableCell padding="checkbox"></TableCell>
                                   <TableCell align="center">{subOrder.suborder}</TableCell>
+                                  <TableCell align="center">{subOrder.ancho}</TableCell>
+                                  <TableCell align="center">{subOrder.hilanderia}</TableCell>
                                   <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
                                   <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
                                   <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{`${subOrder.waste.toFixed(2)} %`}</TableCell>
-                                  <TableCell align="center">
-                                    <Box display="flex" alignItems="center">
-                                      <Box width="100%" mr={1}>
-                                        <LinearProgress variant="determinate" value={subOrder.progress} />
-                                      </Box>
-                                      <Box minWidth={35}>
-                                        <Typography variant="body2" color="textSecondary">{`${subOrder.progress.toFixed(1)}%`}</Typography>
-                                      </Box>
-                                    </Box>
-                                  </TableCell>
+                                  <TableCell align="center">COMPLETAR</TableCell>
+                                  <TableCell align="center">COMPLETAR</TableCell>
+                                  
                                   <TableCell 
                                     align="center" 
                                     style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
