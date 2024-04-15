@@ -23,6 +23,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import { Factory } from '@mui/icons-material';
 import Link from 'next/link';
 import { SidebardProps } from '../types/component-types';
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
 
 const drawerWidth = 255;
 
@@ -86,6 +87,7 @@ export default function Sidebard({open,setOpen,activePage}: SidebardProps) {
     { text: 'Resumen', icon: <Factory />, href: '/resumen_operaciones' },
     { text: 'Revisión de Stock', icon: <ArchiveIcon />, href: '/revision_stock' },
     { text: 'Programación EPT', icon: <TimerIcon />, href: '/programacion_ept' },
+    { text: 'Reporte de Stock', icon: <UnarchiveIcon />, href: '/reporte_stock' },
   ];
 
   return (

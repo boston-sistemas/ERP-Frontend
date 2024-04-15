@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../../components/sidebar';
 import UserBanner from '@/components/banner_usuario';
 import { usePathname } from 'next/navigation';
-import Filtrador from '@/components/operaciones/modulo1/filtros/filtrados_stock';
+import Filtrador from '@/components/operaciones/modulo1/filtros/filtrado_stock_pendiente';
 import Tabla_stock_pendiente from '@/components/operaciones/modulo1/tablas/tabla_stock_pendiente';
 import Typography from '@mui/material/Typography';
 import Tabla_stock_cerrado from '@/components/operaciones/modulo1/tablas/tabla_stock_cerrado';
@@ -13,11 +13,14 @@ import Tabla_stock_cerrado from '@/components/operaciones/modulo1/tablas/tabla_s
 
 
 export default function Panel() {
+
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedTissue, setSelectedTissue] = useState<string>('tejeduria');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const [selectedTissue2, setSelectedTissue2] = useState<string>('tejeduria');
+  const [searchQuery2, setSearchQuery2] = useState<string>('');
 
   return (
     <div className="flex flex-col min-h-screen bg-white relative width: 100%">
@@ -61,17 +64,21 @@ export default function Panel() {
         Reporte de stock de tejeduría CERRADO
       </Typography>
       */}
+      {/*  
+      <Filtrador
+        selectedTissue={selectedTissue2}
+        setSelectedTissue={setSelectedTissue2}
+        searchQuery={searchQuery2}
+        setSearchQuery={setSearchQuery2}
+      />*/}
+
       <Tabla_stock_cerrado/>
 
 
       </div>
 
      
-     
-      <div>
-        
  
-      </div>
 
     </div>
   );
