@@ -19,6 +19,8 @@ import { rows, columns} from './data/data_disponible';
 import Collapse from '@mui/material/Collapse';
 import { useMemo } from 'react';
 import { useState } from 'react'
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 
 interface TablaStockPendienteProps {
@@ -34,7 +36,22 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
 
   const handleClickOpen = () => setOpenDialog(true);
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [stateLabels, setStateLabels] = React.useState<{ [key: string]: string }>({
+  'Listo': 'Listo',
+  'En curso': 'En curso',
+  'Detenido': 'Detenido',
+  '-': '-'
+  });
+
+  const handleClickStateMenu = (event: React.MouseEvent<HTMLElement>, order: string) => {
+    setAnchorEl(event.currentTarget);
+  };
   
+  const handleCloseStateMenu = () => {
+    setAnchorEl(null);
+  };
+
   const handleClose = () => setOpenDialog(false);
 
   const getSelectedRows = () => {
@@ -118,6 +135,9 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
       <TableContainer sx={{ maxHeight: 600 }}>
+        
+          {/*TABLA PRINCIPAL*/}
+        
         <Table  stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
@@ -212,14 +232,20 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                       </Box>
                     </TableCell>
                     <TableCell 
-                      align="center" 
-                      style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
+                    align="center" 
+                    style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
+                    aria-controls="simple-menu" 
+                    aria-haspopup="true" 
+                    onClick={(event) => handleClickStateMenu(event, row.order)}
                     >
                       {row.state}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}>
+                      
+                      {/*TABLA COLAPSADA*/}
+                      
                       <Collapse in={!!openSubOrders[row.order]} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <Box margin={1}>
                           <Table  size="small" aria-label="sub-orders">
@@ -300,6 +326,29 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/*MENU ESTADOS*/}
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleCloseStateMenu}
+        >
+        {Object.entries(stateLabels).map(([stateValue, stateLabel]) => (
+            <MenuItem 
+            key={stateValue} 
+            onClick={() => {
+                handleCloseStateMenu();
+                // Aquí podrías agregar lógica para manejar la selección del estado si es necesario
+            }}
+            style={{ backgroundColor: getStateColor(stateValue), color: 'white' }}
+            >
+            {stateLabel}
+            </MenuItem>
+        ))}
+        </Menu>      
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>
           Enviar Stock
