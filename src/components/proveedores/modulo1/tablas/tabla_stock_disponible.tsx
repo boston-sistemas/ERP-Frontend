@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Button, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -241,22 +241,45 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                             <TableBody>
                               {row.subOrders.map((subOrder, index) => (
                                 <TableRow key={index}>
-                                  <TableCell padding="checkbox"></TableCell>
-                                  <TableCell align="center">{subOrder.suborder}</TableCell>
-                                  <TableCell align="center">{subOrder.ancho}</TableCell>
-                                  <TableCell align="center">{subOrder.hilanderia}</TableCell>
-                                  <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">COMPLETAR</TableCell>
-                                  <TableCell align="center">COMPLETAR</TableCell>
-                                  
-                                  <TableCell 
-                                    align="center" 
-                                    style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
-                                  >
-                                    {subOrder.state}
-                                  </TableCell>
+                                <TableCell padding="checkbox"></TableCell>
+                                <TableCell align="center">{subOrder.suborder}</TableCell>
+                                <TableCell align="center">{subOrder.ancho}</TableCell>
+                                <TableCell align="center">{subOrder.hilanderia}</TableCell>
+                                <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
+                                <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
+                                <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
+                                <TableCell align="center">
+                                    <TextField
+                                        type="number"
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{
+                                            width: 100,
+                                            position: 'relative',
+                                            
+                                          }}
+                                        inputProps={{ style: { textAlign: 'center', height: '30px', padding:'0px 0px' } }}
+                                    />
+                                </TableCell>
+                                <TableCell align="center">
+                                    <TextField
+                                        type="number"
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{
+                                            width: 100,
+                                            position: 'relative',
+                                            
+                                          }}
+                                          inputProps={{ style: { textAlign: 'center', height: '30px', padding:'0px 0px' } }}
+                                    />
+                                </TableCell>
+                                <TableCell sx={{ width: 130, maxWidth: '100%' }}  
+                                align="center" 
+                                style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
+                                >
+                                {subOrder.state}
+                                </TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
