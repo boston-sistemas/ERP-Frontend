@@ -92,11 +92,11 @@ export const columns: readonly Column[] = [
   
 
   export const rows = [
-    createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 'En curso', [
+    createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 'Listo', [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 22500, state: 'Listo'},
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 20000, consumed: 19900, state: 'Listo'}
     ]),
-    createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 'Listo', [
+    createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 'En curso', [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
     ]),
@@ -113,27 +113,27 @@ export const columns: readonly Column[] = [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
     ]),
     createData('FRA1403', '06-06-2024', 'Textil Defranco E.I.R.L.','Listo', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'Listo'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'Listo'}
     ]),
     createData('RCA0350', '07-06-2024', 'Textiles Roca E.I.R.L.', 'Detenido', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 22564, state: 'Listo'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 13936, state: 'Detenido'}
     ]),
     createData('TRI1612', '08-06-2024', 'Tricot Fine S.A.', '-', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'}
     ]),
-    createData('RCA0351', '09-06-2024', 'Textiles Roca E.I.R.L.', 'En curso', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
+    createData('RCA0351', '09-06-2024', 'Textiles Roca E.I.R.L.', '-', [
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'}
     ]),
-    createData('FRA1404', '10-06-2024', 'Textil Defranco E.I.R.L.', 'Listo',[
-      { suborder:'TRI1607', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
+    createData('FRA1404', '10-06-2024', 'Textil Defranco E.I.R.L.', '-',[
+      { suborder:'TRI1607', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'},
     ]),
-    createData('TRI1613', '11-06-2024', 'Tricot Fine S.A.','Detenido', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'}
+    createData('TRI1613', '11-06-2024', 'Tricot Fine S.A.','-', [
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 0, state: '-'}
     ]),
     createData('RCA0352', '12-06-2024', 'Textiles Roca E.I.R.L.', '-', [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},

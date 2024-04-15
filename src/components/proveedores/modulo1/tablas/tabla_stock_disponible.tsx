@@ -279,7 +279,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
       </TableContainer>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>
-          Cerrar
+          Enviar Stock
         </Button>
         <Box sx={{ flex: '1 1 auto' }}>
           <TablePagination

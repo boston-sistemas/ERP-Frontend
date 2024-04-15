@@ -65,10 +65,10 @@ function createData(
 }
 
 const rows = [
-  createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 22564, 19936, 2628, 2.34, true),
-  createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 22560, 19830, 2630, 2.50, true),
-  createData('RCA0349', '03-06-2024', 'Textiles Roca E.I.R.L.', 22570, 19900, 2650, 2.00, false),
-  createData('FRA1402', '04-06-2024', 'Textil Defranco E.I.R.L.', 22580, 19950, 2600, 2.80,true),
+  createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 22564, 22560, 2628, 1.34, true),
+  createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 22560, 22555, 2630, 1.50, true),
+  createData('RCA0349', '03-06-2024', 'Textiles Roca E.I.R.L.', 22570, 22500, 2650, 1.00, false),
+  createData('FRA1402', '04-06-2024', 'Textil Defranco E.I.R.L.', 22580, 22440, 2600, 1.80,true),
   createData('TRI1610', '05-06-2024', 'Tricot Fine S.A.', 22590, 19880, 2610, 2.30, false),
   createData('FRA1403', '06-06-2024', 'Textil Defranco E.I.R.L.', 22540, 19870, 2640, 2.60, false),
   createData('RCA0350', '07-06-2024', 'Textiles Roca E.I.R.L.', 22550, 19920, 2660, 1.90, false),
