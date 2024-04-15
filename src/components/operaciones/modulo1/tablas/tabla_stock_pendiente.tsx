@@ -17,12 +17,19 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AlertaCerradoStock from './alertas/alerta_cerrado_stock';
 import { rows, columns} from './data/data_pendiente';
 import Collapse from '@mui/material/Collapse';
+import { useMemo } from 'react';
+import { useState } from 'react'
 
 
-export default function Tabla_stock_pendiente() {
+interface TablaStockPendienteProps {
+  selectedTissue: string;
+  searchQuery: string;
+}
+
+export default function Tabla_stock_pendiente({ selectedTissue, searchQuery }: TablaStockPendienteProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selected, setSelected] = React.useState<Record<string, boolean>>({});
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openSubOrders, setOpenSubOrders] = React.useState<Record<string, boolean>>({});
 
@@ -102,6 +109,15 @@ export default function Tabla_stock_pendiente() {
     }
   };
 
+  const filteredRows = useMemo(() => {
+    return rows.filter(row =>
+      (selectedTissue === 'tejeduria' && searchQuery === '') ||  // Mostrar todo si está en el valor por defecto y no hay búsqueda
+      (selectedTissue !== 'tejedurIa' && row.textile === selectedTissue) &&  // Filtrar por tejeduría si no está en el valor por defecto
+      (searchQuery === '' || row.order.toLowerCase().includes(searchQuery.toLowerCase()))  // Filtrar por orden si hay búsqueda
+    );
+  }, [selectedTissue, searchQuery]);
+
+
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
       <TableContainer sx={{ maxHeight: 600 }}>
@@ -113,7 +129,17 @@ export default function Tabla_stock_pendiente() {
                   color="default"
                   indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
                   checked={rows.length > 0 && Object.keys(selected).length === rows.length}
-                  onChange={handleSelectAllClick}
+                  onChange={(event) => {
+                    if (event.target.checked) {
+                      const newSelected = rows.reduce((acc, row) => {
+                        acc[row.order] = true;
+                        return acc;
+                      }, {} as Record<string, boolean>);
+                      setSelected(newSelected);
+                    } else {
+                      setSelected({});
+                    }
+                  }}
                   sx={{
                     color: 'white',
                     '&.MuiCheckbox-root': { color: 'white' },
@@ -134,38 +160,44 @@ export default function Tabla_stock_pendiente() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              const isItemSelected = !!selected[row.order];
-              const isRowExpanded = !!openSubOrders[row.order];
-              return (
+            {filteredRows.length > 0 ? (
+              filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <React.Fragment key={row.order}>
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.order)}
+                    onClick={(event) => {
+                      const newSelected = { ...selected, [row.order]: !selected[row.order] };
+                      if (newSelected[row.order]) {
+                        setSelected(newSelected);
+                      } else {
+                        const remainingSelected = { ...newSelected };
+                        delete remainingSelected[row.order];
+                        setSelected(remainingSelected);
+                      }
+                    }}
                     role="checkbox"
-                    aria-checked={isItemSelected}
+                    aria-checked={!!selected[row.order]}
                     tabIndex={-1}
-                    key={row.order}
-                    selected={isItemSelected}
+                    selected={!!selected[row.order]}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
-                        checked={isItemSelected}
+                        checked={!!selected[row.order]}
                       />
                     </TableCell>
-                    <TableCell  align="center" component="th" scope="row">
+                    <TableCell align="center" component="th" scope="row">
                       {row.order}
                       <IconButton
-                      aria-label="expand row"
-                      size="small"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleToggleSubOrder(event, row.order);
-                      }}
-                    >
-                      {openSubOrders[row.order] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </IconButton>
+                        aria-label="expand row"
+                        size="small"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleToggleSubOrder(event, row.order);
+                        }}
+                      >
+                        {openSubOrders[row.order] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      </IconButton>
                     </TableCell>
                     <TableCell align="center">{row.date}</TableCell>
                     <TableCell align="center">{row.textile}</TableCell>
@@ -180,83 +212,94 @@ export default function Tabla_stock_pendiente() {
                         </Box>
                         <Box minWidth={35}>
                           <Typography variant="body2" color="textSecondary">{`${Math.round(row.progress)}%`}</Typography>
-                          {/*<Typography variant="body2" color="textSecondary">{`${row.progress.toFixed(1)}%`}</Typography>*/}
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell align="center" style={{ backgroundColor: getStateColor(row.state), color: 'white' }}>
+                    <TableCell 
+                      align="center" 
+                      style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
+                    >
                       {row.state}
                     </TableCell>
                   </TableRow>
-                  <TableRow >
-                    
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}> {/* Ajusta el colspan */}
-                        <Collapse in={isRowExpanded} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
-                          <Box margin={1}>
-                            <Table  size="small" aria-label="sub-orders">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell padding="checkbox"> 
-                                  </TableCell>  
-                                  <TableCell align="center">Suborden</TableCell>
-                                  <TableCell align="center">Programado (kg)</TableCell>
-                                  <TableCell align="center">Consumido (kg)</TableCell>
-                                  <TableCell align="center">Restante (kg)</TableCell>
-                                  <TableCell align="center">Merma</TableCell>
-                                  <TableCell align="center">Progreso</TableCell>
-                                  <TableCell align="center">Estado</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {row.subOrders.map((subOrder, index) => (
-                                  <TableRow key={index}>
-                                    <TableCell padding="checkbox"></TableCell>
-                                    <TableCell align="center">{subOrder.suborder}</TableCell>
-                                    <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
-                                    <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
-                                    <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
-                                    <TableCell align="center">{`${subOrder.waste.toFixed(2)} %`}</TableCell>
-                                    <TableCell align="center">
-                                      <Box display="flex" alignItems="center">
-                                        <Box width="100%" mr={1}>
-                                          <LinearProgress variant="determinate" value={subOrder.progress} />
-                                        </Box>
-                                        <Box minWidth={35}>
-                                          {/*<Typography variant="body2" color="textSecondary">{`${Math.round(subOrder.progress)}%`}</Typography>*/}
-                                          <Typography variant="body2" color="textSecondary">{`${subOrder.progress.toFixed(1)}%`}</Typography>
-                                        </Box>
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}>
+                      <Collapse in={!!openSubOrders[row.order]} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+                        <Box margin={1}>
+                          <Table size="small" aria-label="sub-orders">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell padding="checkbox"></TableCell>
+                                <TableCell align="center">Suborden</TableCell>
+                                <TableCell align="center">Programado (kg)</TableCell>
+                                <TableCell align="center">Consumido (kg)</TableCell>
+                                <TableCell align="center">Restante (kg)</TableCell>
+                                <TableCell align="center">Merma</TableCell>
+                                <TableCell align="center">Progreso</TableCell>
+                                <TableCell align="center">Estado</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {row.subOrders.map((subOrder, index) => (
+                                <TableRow key={index}>
+                                  <TableCell padding="checkbox"></TableCell>
+                                  <TableCell align="center">{subOrder.suborder}</TableCell>
+                                  <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{`${subOrder.waste.toFixed(2)} %`}</TableCell>
+                                  <TableCell align="center">
+                                    <Box display="flex" alignItems="center">
+                                      <Box width="100%" mr={1}>
+                                        <LinearProgress variant="determinate" value={subOrder.progress} />
                                       </Box>
-                                    </TableCell>
-                                    <TableCell  align="center" style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}>
-                                      {subOrder.state}
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Box>
-                        </Collapse>
-                      </TableCell>        
+                                      <Box minWidth={35}>
+                                        <Typography variant="body2" color="textSecondary">{`${subOrder.progress.toFixed(1)}%`}</Typography>
+                                      </Box>
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell 
+                                    align="center" 
+                                    style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
+                                  >
+                                    {subOrder.state}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
                   </TableRow>
                 </React.Fragment>
-              );
-            })}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center">
+                  No existen datos para esta consulta
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={handleClickOpen}>
+        <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>
           Cerrar
         </Button>
         <Box sx={{ flex: '1 1 auto' }}>
           <TablePagination
             rowsPerPageOptions={[10, 25, 50]}
             component="div"
-            count={rows.length}
+            count={filteredRows.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onPageChange={(event, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(+event.target.value);
+              setPage(0);
+            }}
             className="mt-0"
             labelRowsPerPage="Filas por página:"
             labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}

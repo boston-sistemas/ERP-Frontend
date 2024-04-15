@@ -12,3 +12,4 @@ export type SidebardProps = {
   setOpen: (open: boolean) => void;
   activePage?:string | null;
 };
+

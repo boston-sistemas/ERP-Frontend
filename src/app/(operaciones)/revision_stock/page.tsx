@@ -15,9 +15,8 @@ import Tabla_stock_cerrado from '@/components/operaciones/modulo1/tablas/tabla_s
 export default function Panel() {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedWeek, setSelectedWeek] = useState('semana');
-  const [selectedTissue, setSelectedTissue] = useState('tejeduria');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTissue, setSelectedTissue] = useState<string>('tejeduria');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
 
   return (
@@ -52,7 +51,10 @@ export default function Panel() {
       </Typography>
       */}
 
-      <Tabla_stock_pendiente/>
+      <Tabla_stock_pendiente
+        selectedTissue={selectedTissue}
+        searchQuery={searchQuery}
+      />
       
       {/*
       <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: 'black', margin: '20px 0', textAlign: 'left' ,width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px'}}>

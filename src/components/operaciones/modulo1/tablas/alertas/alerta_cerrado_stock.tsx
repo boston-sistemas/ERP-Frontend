@@ -47,6 +47,10 @@ const AlertaCerradoStock: React.FC<Props> = ({ open, onClose, selectedRows }) =>
             No hay nada seleccionado.
           </Typography>
         ) : (
+          <>
+          <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
+              ¿Estás seguro de <strong>CERRAR</strong> estas órdenes?
+          </Typography>
           <Box sx={{ overflowX: 'auto' }}>
             <Table size="small">
               <TableHead>
@@ -71,6 +75,7 @@ const AlertaCerradoStock: React.FC<Props> = ({ open, onClose, selectedRows }) =>
               </TableBody>
             </Table>
           </Box>
+          </>
         )}
       </DialogContent>
       <DialogActions>

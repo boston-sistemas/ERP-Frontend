@@ -1,10 +1,9 @@
 import React from 'react';
 import { Box, FormControl, InputLabel, Select, MenuItem, IconButton, TextField, InputAdornment } from '@mui/material';
 import ArchiveIcon from '@mui/icons-material/Archive';
-import Image from 'next/image';
 import SearchIcon from '@mui/icons-material/Search';
 import { Delete } from '@mui/icons-material';
-import { RotateLeft } from '@mui/icons-material';
+
 
 interface WeekTissueSelectorProps {
   selectedTissue: string;
@@ -65,8 +64,8 @@ const Filtrador: React.FC<WeekTissueSelectorProps> = ({
             }}
           >
             <MenuItem value={'Tricot Fine S.A.'}>Tricot Fine S.A.</MenuItem>
-            <MenuItem value={'Textil Defranco E.I.R.L'}>Textil Defranco E.I.R.L</MenuItem>
-            <MenuItem value={'Textiles Roca E.I.R.L'}>Textiles Roca E.I.R.L</MenuItem>
+            <MenuItem value={'Textil Defranco E.I.R.L.'}>Textil Defranco E.I.R.L</MenuItem>
+            <MenuItem value={'Textiles Roca E.I.R.L.'}>Textiles Roca E.I.R.L</MenuItem>
             {/* Etc... */}
           </Select>
         </FormControl>
