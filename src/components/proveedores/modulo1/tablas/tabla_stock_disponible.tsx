@@ -1,27 +1,14 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import { Button, TextField, Typography, makeStyles } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import LinearProgress from '@mui/material/LinearProgress';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
+
+import React, { useMemo, useState} from 'react';
+import { 
+    Box, Button, Checkbox, Collapse, IconButton, LinearProgress, 
+    Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, 
+    TableHead, TablePagination, TableRow, TextField, Typography
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { rows, columns } from './data/data_disponible';
 import AlertaEnviarStock from './alertas/alerta_enviar_stock';
-import { rows, columns} from './data/data_disponible';
-import Collapse from '@mui/material/Collapse';
-import { useMemo } from 'react';
-import { useState, useEffect } from 'react'
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { useTheme } from '@emotion/react';
 
 
 
@@ -41,9 +28,9 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openSubOrders, setOpenSubOrders] = React.useState<Record<string, boolean>>({});
-  const handleClickOpen = () => setOpenDialog(true);
+
   const [menuDirectionUp, setMenuDirectionUp] = useState(false);
-  const theme = useTheme()
+ 
   const [rollInputs, setRollInputs] = useState<RollAndWeightInputs>({});
   const [weightInputs, setWeightInputs] = useState<RollAndWeightInputs>({});
 
@@ -334,31 +321,45 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                                 <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
                                 <TableCell align="center">
                                 <TextField
-                                    value={rollInputs[subOrder.id] || ''}
-                                    onChange={(e) => handleRollChange(subOrder.id, e.target.value)}
-                                    type="number"
-                                    variant="outlined"
-                                    size="small"
-                                    inputProps={{ style: { textAlign: 'center' } }}
-                                    style={{width:'140px',}}
+                                  value={rollInputs[subOrder.id] || ''}
+                                  onChange={(e) => handleRollChange(subOrder.id, e.target.value)}
+                                  type="number"
+                                  variant="outlined"
+                                  size="small"
+                                  inputProps={{
+                                    style: {
+                                      height: '25px', 
+                                      padding: '0px 0px',
+                                      textAlign: 'center', 
+                                      fontSize: '0.875rem' 
+                                    }
+                                  }}
+                                  style={{ width: '100px' }}
                                 />
-                                </TableCell>
-                                <TableCell align="center">
+                              </TableCell>
+                              <TableCell align="center">
                                 <TextField
-                                    value={weightInputs[subOrder.id] || ''}
-                                    onChange={(e) => handleWeightChange(subOrder.id, e.target.value)}
-                                    type="number"
-                                    variant="outlined"
-                                    size="small"
-                                    inputProps={{ style: { textAlign: 'center' } }}
-                                    style={{width:'140px'}}
+                                  value={weightInputs[subOrder.id] || ''}
+                                  onChange={(e) => handleWeightChange(subOrder.id, e.target.value)}
+                                  type="number"
+                                  variant="outlined"
+                                  size="small"
+                                  inputProps={{
+                                    style: {
+                                      height: '25px',
+                                      padding: '0px 0px',
+                                      textAlign: 'center',
+                                      fontSize: '0.875rem'
+                                    }
+                                  }}
+                                  style={{ width: '100px' }}
                                 />
-                                </TableCell>
+                              </TableCell>
                                 <TableCell 
                                 onClick={(event) => handleClickStateMenu(event, row.order)}
-                                sx={{ width: 130, maxWidth: '100%' }}  
+                                sx={{  maxWidth: '100%' }}  
                                 align="center" 
-                                style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
+                                style={{ minWidth:'140px', backgroundColor: getStateColor(subOrder.state), color: 'white' }}
                                 >
                                 {subOrder.state}
                                 </TableCell>

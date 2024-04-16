@@ -63,9 +63,9 @@ const AlertaEnviarStock: React.FC<Props> = ({ open, onClose, selectedRows }) => 
               <TableRow>
                 <TableCell align="center">Suborden</TableCell>
                 <TableCell align="center">Ancho</TableCell>
-                <TableCell align="center">Restante</TableCell>
                 <TableCell align="center">Rollos</TableCell>
                 <TableCell align="center">Peso (kg)</TableCell>
+                <TableCell align="center">Restante</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -73,9 +73,9 @@ const AlertaEnviarStock: React.FC<Props> = ({ open, onClose, selectedRows }) => 
                 <TableRow key={index}>
                   <TableCell align="center">{row.id}</TableCell>
                   <TableCell align="center">{row.ancho}</TableCell>
-                  <TableCell align="center">{row.remaining}</TableCell>
                   <TableCell align="center">{row.rolls}</TableCell>
                   <TableCell align="center">{row.weight}</TableCell>
+                  <TableCell align="center">{row.remaining}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
