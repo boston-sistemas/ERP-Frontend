@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography, makeStyles } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -18,9 +18,13 @@ import AlertaEnviarStock from './alertas/alerta_enviar_stock';
 import { rows, columns} from './data/data_disponible';
 import Collapse from '@mui/material/Collapse';
 import { useMemo } from 'react';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@emotion/react';
+
+
+
 
 
 interface TablaStockPendienteProps {
@@ -33,9 +37,26 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openSubOrders, setOpenSubOrders] = React.useState<Record<string, boolean>>({});
-
   const handleClickOpen = () => setOpenDialog(true);
 
+  const [menuDirectionUp, setMenuDirectionUp] = useState(false);
+  const theme = useTheme()
+
+
+  const handleMenuEnter = (node: { clientHeight: any; }) => {
+    if (anchorEl && node) {
+      const rect = anchorEl.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Estima la altura del menú basado en el nodo del menú
+      const estimatedMenuHeight = node.clientHeight;
+      
+      // Si no hay suficiente espacio debajo y hay más espacio arriba, abre hacia arriba
+      setMenuDirectionUp(spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow);
+    }
+  };
+  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [stateLabels, setStateLabels] = React.useState<{ [key: string]: string }>({
   'Listo': 'Listo',
@@ -45,6 +66,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   });
 
   const handleClickStateMenu = (event: React.MouseEvent<HTMLElement>, order: string) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
   
@@ -91,22 +113,11 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
     }
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, order: string) => {
-    const newSelected = { ...selected, [order]: !selected[order] };
-    if (newSelected[order]) {
-      setSelected(newSelected);
-    } else {
-      const remainingSelected = { ...newSelected };
-      delete remainingSelected[order];
-      setSelected(remainingSelected);
-    }
-  };
-
   const handleToggleSubOrder = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, order: string) => {
   event.stopPropagation();
   setOpenSubOrders(prev => ({
     ...prev,
-    [order]: !prev[order] // Cambiar el valor directamente sin depender del estado anterior
+    [order]: !prev[order] 
   }));
 };
   
@@ -130,6 +141,24 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
       (searchQuery === '' || row.order.toLowerCase().includes(searchQuery.toLowerCase()))  // Filtrar por orden si hay búsqueda
     );
   }, [searchQuery]);
+
+  const menuStyles = {
+    menuItem: (state: any) => ({
+      backgroundColor: getStateColor(state),
+      color: 'white',
+      '&:hover': {
+        backgroundColor: 'getStateColor(state)',
+      
+      },
+      margin: '4px 0', 
+      borderRadius: '4px', 
+    }),
+    menu: {
+      marginTop: '8px', 
+      boxShadow: '0 10px 15px rgba(0,0,0,0.7)', 
+    },
+  };
+
 
 
   return (
@@ -183,6 +212,11 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                   <TableRow
                     hover
                     onClick={(event) => {
+                      
+                      if (event.target instanceof HTMLElement && event.target.closest('.ignore-row-click')) {
+                        return;
+                      }
+                    
                       const newSelected = { ...selected, [row.order]: !selected[row.order] };
                       if (newSelected[row.order]) {
                         setSelected(newSelected);
@@ -334,20 +368,76 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleCloseStateMenu}
+        TransitionProps={{ onEntering: handleMenuEnter }}
+          sx={{
+            '& .MuiPaper-root': {
+              backgroundColor: 'white',
+              overflow: 'visible',
+              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
+              mt: menuDirectionUp ? null : '8px',
+              mb: menuDirectionUp ? '8px' : null,
+              '&::before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: menuDirectionUp ? '242px' : '-6px',
+                bottom: menuDirectionUp ? 'calc(100% - 7px)' : null,
+                left: '50%',
+                transform: menuDirectionUp ? 'translateX(-50%) rotate(225deg)' : 'translateX(-50%) rotate(45deg)',
+                width: '13px',
+                height: '13px',
+                bgcolor: 'white',
+             
+                zIndex: 1,
+              },
+            },
+            '& .MuiList-root': {
+              padding: '4px 8px',
+              bgcolor: 'background.paper',
+              borderRadius: '4px',
+              boxShadow: 'none', 
+              width: {
+                xs: '10rem', // Aquí haces que el ícono desaparezca en pantallas extra pequeñas
+                sm: '10rem', // Tamaño más pequeño para pantallas pequeñas
+                md: '10rem', // Tamaño mediano 
+                lg: '11rem',
+              }// optional: removes box shadow if you don't want it
+            },
+          }}
+          anchorOrigin={{
+            vertical: menuDirectionUp ? 'top' : 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: menuDirectionUp ? 'bottom' : 'top',
+            horizontal: 'center',
+          }}
         >
+
         {Object.entries(stateLabels).map(([stateValue, stateLabel]) => (
-            <MenuItem 
+          <MenuItem 
             key={stateValue} 
             onClick={() => {
-                handleCloseStateMenu();
-                // Aquí podrías agregar lógica para manejar la selección del estado si es necesario
+              handleCloseStateMenu();
+              // Aquí podrías agregar lógica para manejar la selección del estado si es necesario
             }}
-            style={{ backgroundColor: getStateColor(stateValue), color: 'white' }}
+            sx={{
+              justifyContent: 'center', // Centra el contenido del MenuItem horizontalmente
+              backgroundColor: getStateColor(stateValue), // Usa la función para determinar el color de fondo
+              color: 'white',
+              '&:hover': {
+                backgroundColor: getStateColor(stateValue), // Mantener el mismo color en hover
+              },
+              textAlign: 'center', // Asegura que el texto esté centrado
+              width: '100%', // Ocupa todo el ancho del menú
+              padding: '15px',
+              margin: '5px 0px', 
+            }}
             >
             {stateLabel}
-            </MenuItem>
+          </MenuItem>
         ))}
-        </Menu>      
+      </Menu>   
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>

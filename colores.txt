@@ -1,0 +1,8 @@
+azul boston Fondo Login: rgb(20, 67, 131)
+rojo logo : rgb(212, 18, 25)
+
+
+En curso: #FFC225
+Listo: #3EC564
+Detenido: #DD2E44
+No Iniciado: #838383
