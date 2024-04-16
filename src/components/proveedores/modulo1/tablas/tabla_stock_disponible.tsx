@@ -334,7 +334,9 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                                           inputProps={{ style: { textAlign: 'center', height: '30px', padding:'0px 0px' } }}
                                     />
                                 </TableCell>
-                                <TableCell sx={{ width: 130, maxWidth: '100%' }}  
+                                <TableCell 
+                                onClick={(event) => handleClickStateMenu(event, row.order)}
+                                sx={{ width: 130, maxWidth: '100%' }}  
                                 align="center" 
                                 style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
                                 >
