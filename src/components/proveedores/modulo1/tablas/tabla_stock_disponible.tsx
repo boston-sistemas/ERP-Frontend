@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState} from 'react';
+import React, { useCallback, useMemo, useState} from 'react';
 import { 
     Box, Button, Checkbox, Collapse, IconButton, LinearProgress, 
     Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, 
@@ -12,8 +12,6 @@ import AlertaEnviarStock from './alertas/alerta_enviar_stock';
 
 
 
-
-
 interface TablaStockPendienteProps {
   searchQuery: string;
 }
@@ -22,61 +20,97 @@ interface RollAndWeightInputs {
   [suborderId: string]: number;
 }
 
-export default function Tabla_stock_disponible({searchQuery }: TablaStockPendienteProps) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+export default function TablaStockDisponible({ searchQuery }: TablaStockPendienteProps) {
+  // Estados de UI
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [openSubOrders, setOpenSubOrders] = React.useState<Record<string, boolean>>({});
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openSubOrders, setOpenSubOrders] = useState<Record<string, boolean>>({});
   const [menuDirectionUp, setMenuDirectionUp] = useState(false);
- 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+   // Definiciones de estado y otras constantes
+  const stateLabels = {
+    'Listo': 'Listo',
+    'En curso': 'En curso',
+    'Detenido': 'Detenido',
+    '-': '-'
+  };
+
+  // Estados para inputs
   const [rollInputs, setRollInputs] = useState<RollAndWeightInputs>({});
   const [weightInputs, setWeightInputs] = useState<RollAndWeightInputs>({});
 
-
-  const handleRollChange = (suborderId: string, value: string) => {
-    const numericValue = value ? parseInt(value, 10) : 0; // Convierte a número, usa 0 si el valor es falsy
+  // Handlers para cambios en inputs
+  const handleRollChange = useCallback((suborderId: string, value: string) => {
+    const numericValue = value ? parseInt(value, 10) : 0;
     setRollInputs(prev => ({ ...prev, [suborderId]: numericValue }));
-  };
-  
-  const handleWeightChange = (suborderId: string, value: string) => {
-    const numericValue = value ? parseInt(value, 10) : 0; // Convierte a número, usa 0 si el valor es falsy
+  }, []);
+
+  const handleWeightChange = useCallback((suborderId: string, value: string) => {
+    const numericValue = value ? parseInt(value, 10) : 0;
     setWeightInputs(prev => ({ ...prev, [suborderId]: numericValue }));
-  };
-  
-  const handleMenuEnter = (node: { clientHeight: any; }) => {
+  }, []);
+
+  // Manejo de menú
+  const handleMenuEnter = useCallback((node: HTMLElement) => {
     if (anchorEl && node) {
       const rect = anchorEl.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      
-      // Estima la altura del menú basado en el nodo del menú
-      const estimatedMenuHeight = node.clientHeight;
-      
-      // Si no hay suficiente espacio debajo y hay más espacio arriba, abre hacia arriba
-      setMenuDirectionUp(spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow);
+      if (rect) {
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        const estimatedMenuHeight = node.clientHeight;
+        setMenuDirectionUp(spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow);
+      }
     }
-  };
-  
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [stateLabels, setStateLabels] = React.useState<{ [key: string]: string }>({
-  'Listo': 'Listo',
-  'En curso': 'En curso',
-  'Detenido': 'Detenido',
-  '-': '-'
-  });
+  }, [anchorEl]);
 
-  const handleClickStateMenu = (event: React.MouseEvent<HTMLElement>, order: string) => {
+  const handleClickStateMenu = useCallback((event: React.MouseEvent<HTMLElement>, order: string) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-  };
-  
-  const handleCloseStateMenu = () => {
-    setAnchorEl(null);
+  }, []);
+
+
+  const handleClose = () => {
+    setOpenDialog(false); 
   };
 
-  const handleClose = () => setOpenDialog(false);
+  const handleCloseStateMenu = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  // Handlers para selección
+  const handleSelectAllClick = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = rows.reduce((acc, row) => {
+        acc[row.order] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      setSelected(newSelected);
+    } else {
+      setSelected({});
+    }
+  }, []);
+
+  const handleToggleSubOrder = useCallback((event: React.MouseEvent<HTMLButtonElement>, order: string) => {
+    event.stopPropagation();
+    setOpenSubOrders(prev => ({
+      ...prev,
+      [order]: !prev[order]
+    }));
+  }, []);
+
+  const getStateColor = useCallback((state: string) => ({
+    '-': '#9C9DA1',
+    'Detenido': '#DD2E44',
+    'En curso': '#FFC225',
+    'Listo': '#3EC564'
+  }[state] || 'none'), []);
+
+  const filteredRows = useMemo(() => rows.filter(row =>
+    (searchQuery === '' || row.order.toLowerCase().includes(searchQuery.toLowerCase()))
+  ), [searchQuery]);
 
   const getSelectedRows = () => {
     return Object.keys(selected)
@@ -102,83 +136,12 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
       });
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-  
- 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = rows.reduce((acc, row) => {
-        acc[row.order] = true;
-        return acc;
-      }, {} as Record<string, boolean>);
-      setSelected(newSelected);
-    } else {
-      setSelected({});
-    }
-  };
-
-  const handleToggleSubOrder = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, order: string) => {
-    event.stopPropagation();
-    setOpenSubOrders(prev => ({
-      ...prev,
-      [order]: !prev[order]
-    }));
-  };
-  
-  const getStateColor = (state: any) => {
-    switch (state) {
-      case '-':
-        return '#9C9DA1';
-      case 'Detenido':
-        return '#DD2E44';
-      case 'En curso':
-        return '#FFC225';
-      case 'Listo':
-        return '#3EC564';
-      default:
-        return 'none';
-    }
-  };
-
-  const filteredRows = useMemo(() => {
-    return rows.filter(row =>
-      (searchQuery === '' || row.order.toLowerCase().includes(searchQuery.toLowerCase()))  // Filtrar por orden si hay búsqueda
-    );
-  }, [searchQuery]);
-
-  const menuStyles = {
-    menuItem: (state: any) => ({
-      backgroundColor: getStateColor(state),
-      color: 'white',
-      '&:hover': {
-        backgroundColor: 'getStateColor(state)',
-      
-      },
-      margin: '4px 0', 
-      borderRadius: '4px', 
-    }),
-    menu: {
-      marginTop: '8px', 
-      boxShadow: '0 10px 15px rgba(0,0,0,0.7)', 
-    },
-  };
-
-
-
   return (
     <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
       <TableContainer sx={{ maxHeight: 600 }}>
-        
-          {/*TABLA PRINCIPAL*/}
-        
-        <Table  stickyHeader aria-label="collapsible table">
+
+        {/* Tabla Principal */}
+        <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell align="center" padding="checkbox" style={{ backgroundColor: 'rgb(20, 67, 131)' }}>
@@ -186,17 +149,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                   color="default"
                   indeterminate={Object.keys(selected).length > 0 && Object.keys(selected).length < rows.length}
                   checked={rows.length > 0 && Object.keys(selected).length === rows.length}
-                  onChange={(event) => {
-                    if (event.target.checked) {
-                      const newSelected = rows.reduce((acc, row) => {
-                        acc[row.order] = true;
-                        return acc;
-                      }, {} as Record<string, boolean>);
-                      setSelected(newSelected);
-                    } else {
-                      setSelected({});
-                    }
-                  }}
+                  onChange={handleSelectAllClick}
                   sx={{
                     color: 'white',
                     '&.MuiCheckbox-root': { color: 'white' },
@@ -216,6 +169,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
               ))}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {filteredRows.length > 0 ? (
               filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
@@ -223,11 +177,9 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                   <TableRow
                     hover
                     onClick={(event) => {
-                      
                       if (event.target instanceof HTMLElement && event.target.closest('.ignore-row-click')) {
                         return;
                       }
-                    
                       const newSelected = { ...selected, [row.order]: !selected[row.order] };
                       if (newSelected[row.order]) {
                         setSelected(newSelected);
@@ -243,10 +195,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                     selected={!!selected[row.order]}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={!!selected[row.order]}
-                      />
+                      <Checkbox color="primary" checked={!!selected[row.order]} />
                     </TableCell>
                     <TableCell align="center" component="th" scope="row">
                       {row.order}
@@ -277,23 +226,22 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                       </Box>
                     </TableCell>
                     <TableCell 
-                    align="center" 
-                    style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
-                    aria-controls="simple-menu" 
-                    aria-haspopup="true" 
-                    onClick={(event) => handleClickStateMenu(event, row.order)}
+                      align="center" 
+                      style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
+                      aria-controls="simple-menu" 
+                      aria-haspopup="true" 
+                      onClick={(event) => handleClickStateMenu(event, row.order)}
                     >
                       {row.state}
                     </TableCell>
                   </TableRow>
+
+                  {/* Tabla Colapsada */}
                   <TableRow>
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}>
-                      
-                      {/*TABLA COLAPSADA*/}
-                      
                       <Collapse in={!!openSubOrders[row.order]} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <Box margin={1}>
-                          <Table  size="small" aria-label="sub-orders">
+                          <Table size="small" aria-label="sub-orders">
                             <TableHead>
                               <TableRow>
                                 <TableCell padding="checkbox"></TableCell>
@@ -305,64 +253,49 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                                 <TableCell align="center">Restante (kg)</TableCell>
                                 <TableCell align="center">Rollos</TableCell>
                                 <TableCell align="center">Peso (kg)</TableCell>
-                            
                                 <TableCell align="center">Estado</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
                               {row.subOrders.map((subOrder, index) => (
                                 <TableRow key={index}>
-                                <TableCell padding="checkbox"></TableCell>
-                                <TableCell align="center">{subOrder.suborder}</TableCell>
-                                <TableCell align="center">{subOrder.ancho}</TableCell>
-                                <TableCell align="center">{subOrder.hilanderia}</TableCell>
-                                <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
-                                <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
-                                <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
-                                <TableCell align="center">
-                                <TextField
-                                  value={rollInputs[subOrder.id] || ''}
-                                  onChange={(e) => handleRollChange(subOrder.id, e.target.value)}
-                                  type="number"
-                                  variant="outlined"
-                                  size="small"
-                                  inputProps={{
-                                    style: {
-                                      height: '25px', 
-                                      padding: '0px 0px',
-                                      textAlign: 'center', 
-                                      fontSize: '0.875rem' 
-                                    }
-                                  }}
-                                  style={{ width: '100px' }}
-                                />
-                              </TableCell>
-                              <TableCell align="center">
-                                <TextField
-                                  value={weightInputs[subOrder.id] || ''}
-                                  onChange={(e) => handleWeightChange(subOrder.id, e.target.value)}
-                                  type="number"
-                                  variant="outlined"
-                                  size="small"
-                                  inputProps={{
-                                    style: {
-                                      height: '25px',
-                                      padding: '0px 0px',
-                                      textAlign: 'center',
-                                      fontSize: '0.875rem'
-                                    }
-                                  }}
-                                  style={{ width: '100px' }}
-                                />
-                              </TableCell>
-                                <TableCell 
-                                onClick={(event) => handleClickStateMenu(event, row.order)}
-                                sx={{  maxWidth: '100%' }}  
-                                align="center" 
-                                style={{ minWidth:'140px', backgroundColor: getStateColor(subOrder.state), color: 'white' }}
-                                >
-                                {subOrder.state}
-                                </TableCell>
+                                  <TableCell padding="checkbox"></TableCell>
+                                  <TableCell align="center">{subOrder.suborder}</TableCell>
+                                  <TableCell align="center">{subOrder.ancho}</TableCell>
+                                  <TableCell align="center">{subOrder.hilanderia}</TableCell>
+                                  <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">
+                                    <TextField
+                                      value={rollInputs[subOrder.id] || ''}
+                                      onChange={(e) => handleRollChange(subOrder.id, e.target.value)}
+                                      type="number"
+                                      variant="outlined"
+                                      size="small"
+                                      inputProps={{ style: { height: '25px', padding: '0px 0px', textAlign: 'center', fontSize: '0.875rem' } }}
+                                      style={{ width: '100px' }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <TextField
+                                      value={weightInputs[subOrder.id] || ''}
+                                      onChange={(e) => handleWeightChange(subOrder.id, e.target.value)}
+                                      type="number"
+                                      variant="outlined"
+                                      size="small"
+                                      inputProps={{ style: { height: '25px', padding: '0px 0px', textAlign: 'center', fontSize: '0.875rem' } }}
+                                      style={{ width: '100px' }}
+                                    />
+                                  </TableCell>
+                                  <TableCell 
+                                    onClick={(event) => handleClickStateMenu(event, row.order)}
+                                    sx={{ maxWidth: '100%' }}  
+                                    align="center" 
+                                    style={{ minWidth: '140px', backgroundColor: getStateColor(subOrder.state), color: 'white' }}
+                                  >
+                                    {subOrder.state}
+                                  </TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
@@ -384,7 +317,7 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
         </Table>
       </TableContainer>
 
-      {/*MENU ESTADOS*/}
+      {/* Menú de Estados */}
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -392,98 +325,91 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
         open={Boolean(anchorEl)}
         onClose={handleCloseStateMenu}
         TransitionProps={{ onEntering: handleMenuEnter }}
-          sx={{
-            '& .MuiPaper-root': {
-              backgroundColor: 'white',
-              overflow: 'visible',
-              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
-              mt: menuDirectionUp ? null : '8px',
-              mb: menuDirectionUp ? '8px' : null,
-              '&::before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: menuDirectionUp ? '242px' : '-6px',
-                bottom: menuDirectionUp ? 'calc(100% - 7px)' : null,
-                left: '50%',
-                transform: menuDirectionUp ? 'translateX(-50%) rotate(225deg)' : 'translateX(-50%) rotate(45deg)',
-                width: '13px',
-                height: '13px',
-                bgcolor: 'white',
-             
-                zIndex: 1,
-              },
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: 'white',
+            overflow: 'visible',
+            filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
+            mt: menuDirectionUp ? null : '8px',
+            mb: menuDirectionUp ? '8px' : null,
+            '&::before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: menuDirectionUp ? '242px' : '-6px',
+              bottom: menuDirectionUp ? 'calc(100% - 7px)' : null,
+              left: '50%',
+              transform: menuDirectionUp ? 'translateX(-50%) rotate(225deg)' : 'translateX(-50%) rotate(45deg)',
+              width: '13px',
+              height: '13px',
+              bgcolor: 'white',
+              zIndex: 1,
             },
-            '& .MuiList-root': {
-              padding: '4px 8px',
-              bgcolor: 'background.paper',
-              borderRadius: '4px',
-              boxShadow: 'none', 
-              width: {
-                xs: '10rem', // Aquí haces que el ícono desaparezca en pantallas extra pequeñas
-                sm: '10rem', // Tamaño más pequeño para pantallas pequeñas
-                md: '10rem', // Tamaño mediano 
-                lg: '11rem',
-              }// optional: removes box shadow if you don't want it
-            },
-          }}
-          anchorOrigin={{
-            vertical: menuDirectionUp ? 'top' : 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: menuDirectionUp ? 'bottom' : 'top',
-            horizontal: 'center',
-          }}
-        >
-
+          },
+          '& .MuiList-root': {
+            padding: '4px 8px',
+            bgcolor: 'background.paper',
+            borderRadius: '4px',
+            boxShadow: 'none',
+            width: '10rem'
+          },
+        }}
+        anchorOrigin={{
+          vertical: menuDirectionUp ? 'top' : 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: menuDirectionUp ? 'bottom' : 'top',
+          horizontal: 'center',
+        }}
+      >
         {Object.entries(stateLabels).map(([stateValue, stateLabel]) => (
-          <MenuItem 
-            key={stateValue} 
+          <MenuItem
+            key={stateValue}
             onClick={() => {
               handleCloseStateMenu();
-              // Aquí podrías agregar lógica para manejar la selección del estado si es necesario
             }}
             sx={{
-              justifyContent: 'center', // Centra el contenido del MenuItem horizontalmente
-              backgroundColor: getStateColor(stateValue), // Usa la función para determinar el color de fondo
+              justifyContent: 'center',
+              backgroundColor: getStateColor(stateValue), 
               color: 'white',
               '&:hover': {
-                backgroundColor: getStateColor(stateValue), // Mantener el mismo color en hover
+                backgroundColor: getStateColor(stateValue), 
               },
-              textAlign: 'center', // Asegura que el texto esté centrado
-              width: '100%', // Ocupa todo el ancho del menú
+              textAlign: 'center', 
+              width: '100%', 
               padding: '15px',
-              margin: '5px 0px', 
+              margin: '5px 0px',
             }}
-            >
+          >
             {stateLabel}
           </MenuItem>
         ))}
-      </Menu>   
+      </Menu>
 
+      {/* Controles de Paginación y Acciones */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>
           Enviar Stock
         </Button>
-        <Box sx={{ flex: '1 1 auto' }}>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(event, newPage) => setPage(newPage)}
-            onRowsPerPageChange={(event) => {
-              setRowsPerPage(+event.target.value);
-              setPage(0);
-            }}
-            className="mt-0"
-            labelRowsPerPage="Filas por página:"
-            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}
-          />
-        </Box>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50]}
+          component="div"
+          count={filteredRows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(event, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(+event.target.value);
+            setPage(0);
+          }}
+          className="mt-0"
+          labelRowsPerPage="Filas por página:"
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}
+        />
       </Box>
+
+      {/* Alerta de Envío de Stock */}
       <AlertaEnviarStock open={openDialog} onClose={handleClose} selectedRows={getSelectedRows()} />
     </Paper>
   );
