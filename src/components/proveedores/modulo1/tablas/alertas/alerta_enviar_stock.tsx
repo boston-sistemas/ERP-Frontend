@@ -4,11 +4,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 interface SubOrder {
+  id:string;
   order: string;
   textile: string;
   consumed: number;
   programmed: number;
   progress: number;
+  suborder: string; 
+  ancho: string;
+  remaining: number;
+  rolls: number;  
+  weight: number;
 }
 
 interface Props {
@@ -44,35 +50,35 @@ const AlertaEnviarStock: React.FC<Props> = ({ open, onClose, selectedRows }) => 
       <DialogContent dividers sx={{ overflowX: 'auto', width: '100%' }}>
         {selectedRows.length === 0 ? (
           <Typography gutterBottom textAlign="center" mt="10px" fontSize="18px">
-            No hay nada seleccionado.
+            No hay subórdenes seleccionadas.
           </Typography>
         ) : (
           <>
           <Typography gutterBottom textAlign="center" mb="20px" fontSize="18px">
-              ¿Estás seguro de <strong>CERRAR</strong> estas órdenes?
+              ¿Estás seguro de <strong>ENVIAR</strong> estas subórdenes?
           </Typography>
           <Box sx={{ overflowX: 'auto' }}>
             <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Orden</TableCell>
-                  <TableCell align="center">Tejeduría</TableCell>
-                  <TableCell align="center">Consumido (kg)</TableCell>
-                  <TableCell align="center">Programado (kg)</TableCell>
-                  <TableCell align="center">Progreso (%)</TableCell>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Suborden</TableCell>
+                <TableCell align="center">Ancho</TableCell>
+                <TableCell align="center">Restante</TableCell>
+                <TableCell align="center">Rollos</TableCell>
+                <TableCell align="center">Peso (kg)</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {selectedRows.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell align="center">{row.id}</TableCell>
+                  <TableCell align="center">{row.ancho}</TableCell>
+                  <TableCell align="center">{row.remaining}</TableCell>
+                  <TableCell align="center">{row.rolls}</TableCell>
+                  <TableCell align="center">{row.weight}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {selectedRows.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.order}</TableCell>
-                    <TableCell align="center">{row.textile}</TableCell>
-                    <TableCell align="center">{row.consumed}</TableCell>
-                    <TableCell align="center">{row.programmed}</TableCell>
-                    <TableCell align="center">{`${row.progress.toFixed(2)}%`}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+              ))}
+            </TableBody>
             </Table>
           </Box>
           </>
@@ -80,10 +86,9 @@ const AlertaEnviarStock: React.FC<Props> = ({ open, onClose, selectedRows }) => 
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
-        <Button onClick={onClose} color="primary">Cerrar</Button>
+        <Button onClick={onClose} color="primary">Enviar</Button>
       </DialogActions>
     </Dialog>
   );
 };
-
 export default AlertaEnviarStock;

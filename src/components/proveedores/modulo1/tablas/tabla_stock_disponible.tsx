@@ -31,6 +31,10 @@ interface TablaStockPendienteProps {
   searchQuery: string;
 }
 
+interface RollAndWeightInputs {
+  [suborderId: string]: number;
+}
+
 export default function Tabla_stock_disponible({searchQuery }: TablaStockPendienteProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -38,11 +42,22 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openSubOrders, setOpenSubOrders] = React.useState<Record<string, boolean>>({});
   const handleClickOpen = () => setOpenDialog(true);
-
   const [menuDirectionUp, setMenuDirectionUp] = useState(false);
   const theme = useTheme()
+  const [rollInputs, setRollInputs] = useState<RollAndWeightInputs>({});
+  const [weightInputs, setWeightInputs] = useState<RollAndWeightInputs>({});
 
 
+  const handleRollChange = (suborderId: string, value: string) => {
+    const numericValue = value ? parseInt(value, 10) : 0; // Convierte a número, usa 0 si el valor es falsy
+    setRollInputs(prev => ({ ...prev, [suborderId]: numericValue }));
+  };
+  
+  const handleWeightChange = (suborderId: string, value: string) => {
+    const numericValue = value ? parseInt(value, 10) : 0; // Convierte a número, usa 0 si el valor es falsy
+    setWeightInputs(prev => ({ ...prev, [suborderId]: numericValue }));
+  };
+  
   const handleMenuEnter = (node: { clientHeight: any; }) => {
     if (anchorEl && node) {
       const rect = anchorEl.getBoundingClientRect();
@@ -78,18 +93,27 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
 
   const getSelectedRows = () => {
     return Object.keys(selected)
-      .filter((key) => selected[key])
-      .map((key) => rows.find((row) => row.order === key)!)
-      .filter(Boolean)
-      .map((row) => ({
-        order: row.order,
-        textile: row.textile,
-        consumed: row.consumed,
-        programmed: row.programmed,
-        progress: row.progress
-      }));
+      .filter(key => selected[key])
+      .flatMap(key => {
+        const row = rows.find(r => r.order === key);
+        if (row) {
+          return row.subOrders.map(subOrder => ({
+            id: subOrder.id,
+            order: row.order,
+            textile: row.textile,
+            consumed: subOrder.consumed,
+            programmed: subOrder.programmed,
+            progress: subOrder.progress,
+            suborder: subOrder.suborder,
+            ancho: subOrder.ancho,
+            remaining: subOrder.remaining,
+            rolls: rollInputs[subOrder.id] || 0,
+            weight: weightInputs[subOrder.id] || 0
+          }));
+        }
+        return [];
+      });
   };
-
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -114,12 +138,12 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
   };
 
   const handleToggleSubOrder = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, order: string) => {
-  event.stopPropagation();
-  setOpenSubOrders(prev => ({
-    ...prev,
-    [order]: !prev[order] 
-  }));
-};
+    event.stopPropagation();
+    setOpenSubOrders(prev => ({
+      ...prev,
+      [order]: !prev[order]
+    }));
+  };
   
   const getStateColor = (state: any) => {
     switch (state) {
@@ -309,30 +333,26 @@ export default function Tabla_stock_disponible({searchQuery }: TablaStockPendien
                                 <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
                                 <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
                                 <TableCell align="center">
-                                    <TextField
-                                        type="number"
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{
-                                            width: 100,
-                                            position: 'relative',
-                                            
-                                          }}
-                                        inputProps={{ style: { textAlign: 'center', height: '30px', padding:'0px 0px' } }}
-                                    />
+                                <TextField
+                                    value={rollInputs[subOrder.id] || ''}
+                                    onChange={(e) => handleRollChange(subOrder.id, e.target.value)}
+                                    type="number"
+                                    variant="outlined"
+                                    size="small"
+                                    inputProps={{ style: { textAlign: 'center' } }}
+                                    style={{width:'140px',}}
+                                />
                                 </TableCell>
                                 <TableCell align="center">
-                                    <TextField
-                                        type="number"
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{
-                                            width: 100,
-                                            position: 'relative',
-                                            
-                                          }}
-                                          inputProps={{ style: { textAlign: 'center', height: '30px', padding:'0px 0px' } }}
-                                    />
+                                <TextField
+                                    value={weightInputs[subOrder.id] || ''}
+                                    onChange={(e) => handleWeightChange(subOrder.id, e.target.value)}
+                                    type="number"
+                                    variant="outlined"
+                                    size="small"
+                                    inputProps={{ style: { textAlign: 'center' } }}
+                                    style={{width:'140px'}}
+                                />
                                 </TableCell>
                                 <TableCell 
                                 onClick={(event) => handleClickStateMenu(event, row.order)}
