@@ -93,8 +93,8 @@ export const columns: readonly Column[] = [
 
   export const rows = [
     createData('TRI1607', '01-06-2024', 'Tricot Fine S.A.', 'Listo', [
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 22500, state: 'Listo'},
-      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 20000, consumed: 19900, state: 'Listo'}
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 100, consumed: 90, state: 'Listo'},
+      { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 20000, consumed: 10, state: 'Listo'}
     ]),
     createData('TRI1601', '02-06-2024', 'Tricot Fine S.A.', 'En curso', [
       { suborder:'JLL13590', date:'01-06-2024', textile:'Tricot Fine S.A.', programmed: 22564, consumed: 19936, state: 'En curso'},

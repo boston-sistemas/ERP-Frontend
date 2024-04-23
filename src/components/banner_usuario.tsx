@@ -24,6 +24,7 @@ export default function UserBanner({userProfilePic, sidebarWidth }: UserBannerPr
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     router.push('/auth/login')
     console.log('Cerrar sesión');
   };

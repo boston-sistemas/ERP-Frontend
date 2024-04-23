@@ -211,7 +211,7 @@ export default function Tabla_stock_pendiente({ selectedTissue, searchQuery }: T
                           <LinearProgress variant="determinate" value={row.progress} />
                         </Box>
                         <Box minWidth={35}>
-                          <Typography variant="body2" color="textSecondary">{`${Math.round(row.progress)}%`}</Typography>
+                          <Typography variant="body2" color="textSecondary">{`${row.progress.toFixed(2)}%`}</Typography>
                         </Box>
                       </Box>
                     </TableCell>

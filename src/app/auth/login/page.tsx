@@ -12,20 +12,37 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LanguageIcon from '@mui/icons-material/Language';
+import axios from 'axios';
 
 export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (event: FormSubmitEvent) => {
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    console.log('Inicio de sesión solicitado');
-    router.push('/panel');
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/v1/usuarios/login', {
+        username,
+        password,
+      });
+
+      console.log('Login exitoso', response.data);
+      router.push('/panel'); // Redirige solo si el login es exitoso
+    } catch (error:any) {
+      console.error('Error de inicio de sesión:', error.response ? error.response.data : error.message);
+      alert('Error al iniciar sesión: ' + (error.response ? error.response.data.detail : error.message));
+    }
   };
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  
 
   return (
     <div className="flex flex-wrap min-h-screen">
@@ -64,6 +81,8 @@ export default function Login() {
                 variant="standard"
                 margin="normal"
                 fullWidth
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <TextField
                 type={showPassword ? 'text' : 'password'}
@@ -72,6 +91,8 @@ export default function Login() {
                 variant="standard"
                 margin="normal"
                 fullWidth
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

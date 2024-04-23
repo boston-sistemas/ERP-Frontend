@@ -230,7 +230,7 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
                       style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
                       aria-controls="simple-menu" 
                       aria-haspopup="true" 
-                      onClick={(event) => handleClickStateMenu(event, row.order)}
+                      
                     >
                       {row.state}
                     </TableCell>
