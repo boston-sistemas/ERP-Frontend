@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FormSubmitEvent } from '../../../types/component-types';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -13,25 +12,27 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LanguageIcon from '@mui/icons-material/Language';
 import axios from 'axios';
+import { useUser } from '../../../context/UserContext'; 
 
 export default function Login() {
+  const { loginUser } = useUser();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  
 
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-
     try {
       const response = await axios.post('http://localhost:8080/api/v1/usuarios/login', {
         username,
         password,
       });
-
-      console.log('Login exitoso', response.data);
-      router.push('/panel'); // Redirige solo si el login es exitoso
-    } catch (error:any) {
+      const { user, access_token } = response.data;
+      loginUser(user, access_token); 
+      router.push('/panel'); 
+    } catch (error: any) {
       console.error('Error de inicio de sesión:', error.response ? error.response.data : error.message);
       alert('Error al iniciar sesión: ' + (error.response ? error.response.data.detail : error.message));
     }
