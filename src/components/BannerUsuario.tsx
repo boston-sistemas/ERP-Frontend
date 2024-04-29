@@ -19,7 +19,7 @@ export default function UserBanner({userProfilePic, sidebarWidth }: UserBannerPr
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleCerrarMenu = () => {
     setAnchorEl(null);
   };
 
@@ -31,7 +31,7 @@ export default function UserBanner({userProfilePic, sidebarWidth }: UserBannerPr
 
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between" p={2} bgcolor="white"
-         style={{ marginLeft: sidebarWidth, transition: 'margin-left 0.3s', width: '100%' , height: '65px',borderBottom: '1px solid #E0E0E0'}}>
+         sx={{ marginLeft: sidebarWidth, transition: 'margin-left 0.3s', width: '100%' , height: '65px',borderBottom: '1px solid #E0E0E0'}}>
       <Box display="flex" alignItems="center" >
       <div className="pl-[59px]">
         <Image
@@ -47,13 +47,7 @@ export default function UserBanner({userProfilePic, sidebarWidth }: UserBannerPr
         <IconButton onClick={handleMenuClick}>
           <MoreVertIcon />
         </IconButton>
-        <Menu
-          id="user-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
+        <Menu id="user-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleCerrarMenu}>
           <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
         </Menu>
       </Box>

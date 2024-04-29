@@ -34,7 +34,7 @@ const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
       height: '130px', borderBottom: '1px solid #E0E0E0',
       maxWidth: 'calc(100%-10px)', 
       boxSizing: 'border-box', 
-      overflowX: 'auto', // Permite desplazamiento horizontal si el contenido es muy ancho
+      overflowX: 'auto',
     }}
       >
       
@@ -52,37 +52,23 @@ const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
             value={selectedTissue}
             onChange={(e) => setSelectedTissue(e.target.value as string)}
             label="Tejeduría"
-            style={{ 
-              height: '40px', 
-              backgroundColor: 'white',
-              fontSize: '16px',
-            }}
+            style={{ height: '40px', backgroundColor: 'white', fontSize: '16px' }}
           >
             <MenuItem value={'Tricot Fine S.A.'}>Tricot Fine S.A.</MenuItem>
             <MenuItem value={'Textil Defranco E.I.R.L.'}>Textil Defranco E.I.R.L</MenuItem>
             <MenuItem value={'Textiles Roca E.I.R.L.'}>Textiles Roca E.I.R.L</MenuItem>
-            {/* Etc... */}
           </Select>
         </FormControl>
        
        
         <TextField
-          value={searchQuery}
-          
+          value={searchQuery}    
           onChange={(e) => setSearchQuery(e.target.value)}
           variant="outlined"
           placeholder="Orden"
-          style={{ 
-            backgroundColor: 'white', 
-            padding: '0 15px',
-            width:"190px" ,
-          }}
+          style={{ backgroundColor: 'white',  padding: '0 15px', width:"190px" }}
           sx={{
-            height: 40,
-            '.MuiInputBase-root': { height: '40px' },
-            '.MuiOutlinedInput-input': { padding: '10px 14px' },
-            '.MuiSvgIcon-root': { fontSize: '1.25rem' },
-          }}
+            height: 40,'.MuiInputBase-root': { height: '40px' },  '.MuiOutlinedInput-input': { padding: '10px 14px' }, '.MuiSvgIcon-root': { fontSize: '1.25rem' } }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -91,18 +77,6 @@ const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
             ),
           }}
         />
-
-         {/* Botón para exportar a Google Sheets 
-         <IconButton>
-          <Image
-              src="/google-sheets-icon.png" 
-              alt="Export to Google Sheets"
-              width={30} 
-              height={30} 
-            />
-        </IconButton>
-        */}
-        
         <IconButton onClick={handleReset}>
           <Delete style={{color:"grey", fontSize: 25}}/>
         </IconButton>

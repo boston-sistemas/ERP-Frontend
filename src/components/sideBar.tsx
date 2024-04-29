@@ -102,8 +102,7 @@ export default function Sidebard({open,setOpen,activePage}: SidebardProps) {
             width: '100%', 
             overflow: 'hidden',
           }}>
-            <div style={{
-              marginLeft: open ? 0 : 7,
+            <div style={{ marginLeft: open ? 0 : 7,
               transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
@@ -126,22 +125,8 @@ export default function Sidebard({open,setOpen,activePage}: SidebardProps) {
           {menuItems.map((item, index) => (
             <Link key={item.text} href={item.href} passHref>
                <ListItem disablePadding sx={{ display: 'block', backgroundColor: activePage === item.href ? 'rgb(20, 67, 131)' : 'inherit' }}>
-                <ListItemButton
-                  sx={{
-                    color: activePage === item.href ? 'white' : 'inherit', // Cambia el color del texto a blanco si el botón está activo
-                    '&:hover': {
-                      backgroundColor: activePage === item.href ? 'grey' : 'rgba(0, 0, 0, 0.04)', // Cambia el color de fondo al azul si el botón está activo
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                      color: activePage === item.href ? 'white' : 'inherit',
-                    }}
-                  >
+                <ListItemButton sx={{ color: activePage === item.href ? 'white' : 'inherit', '&:hover': { backgroundColor: activePage === item.href ? 'grey' : 'rgba(0, 0, 0, 0.04)'}}}>
+                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', color: activePage === item.href ? 'white' : 'inherit' }}>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />

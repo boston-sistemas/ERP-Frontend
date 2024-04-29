@@ -30,7 +30,7 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
   const [menuDirectionUp, setMenuDirectionUp] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-   // Definiciones de estado y otras constantes
+
   const stateLabels = {
     'Listo': 'Listo',
     'En curso': 'En curso',
@@ -38,11 +38,10 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
     '-': '-'
   };
 
-  // Estados para inputs
   const [rollInputs, setRollInputs] = useState<RollAndWeightInputs>({});
   const [weightInputs, setWeightInputs] = useState<RollAndWeightInputs>({});
 
-  // Handlers para cambios en inputs
+
   const handleRollChange = useCallback((suborderId: string, value: string) => {
     const numericValue = value ? parseInt(value, 10) : 0;
     setRollInputs(prev => ({ ...prev, [suborderId]: numericValue }));
