@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import AlertaCerradoStock from './alertas/alerta_cerrado_stock';
+import AlertaCerradoStock from './OperacionesAlertaCerradoStock';
 import { rows, columns} from './data/data_pendiente';
 import Collapse from '@mui/material/Collapse';
 import { useMemo } from 'react';

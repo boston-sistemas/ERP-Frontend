@@ -2,11 +2,11 @@
 
 
 import React, { useState } from 'react';
-import Sidebar from '../../../components/sidebar';
-import UserBanner from '@/components/banner_usuario';
+import Sidebar from '../../../../components/Sidebar';
+import UserBanner from '@/components/BannerUsuario';
 import { usePathname } from 'next/navigation';
-import Tabla_stock_disponible from '@/components/proveedores/modulo1/tablas/tabla_stock_disponible';
-import Filtrador_Disponible from '@/components/proveedores/modulo1/filtros/filtro_stock_disponible';
+import Tabla_stock_disponible from '@/components/modulo1/TejeduriaTablaStockDisponible';
+import Filtrador_Disponible from '@/components/modulo1/TejeduriaFiltroStockPendiente';
 
 
 

@@ -182,15 +182,15 @@ export default function Tabla_stock_pendiente() {
                 checked={rows.length > 0 && Object.keys(selected).length === rows.length}
                 onChange={handleSelectAllClick}
                 sx={{
-                  color: 'white', // Color por defecto del icono
+                  color: 'white', 
                   '&.MuiCheckbox-root': { 
-                    color: 'white', // Color del borde del checkbox cuando no está seleccionado
+                    color: 'white', 
                   },
                   '&.Mui-checked': { 
-                    color: 'white', // Color del checkbox cuando está seleccionado
+                    color: 'white', 
                   },
                   '& .MuiSvgIcon-root': { 
-                    fill: 'white', // Color del interior del checkbox
+                    fill: 'white',                    
                   },
                 }}
               />

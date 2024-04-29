@@ -8,7 +8,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { rows, columns } from './data/data_disponible';
-import AlertaEnviarStock from './alertas/alerta_enviar_stock';
+import AlertaEnviarStock from './TejeduriaAlertaEnviarStock';
 
 
 

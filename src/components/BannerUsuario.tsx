@@ -25,7 +25,7 @@ export default function UserBanner({userProfilePic, sidebarWidth }: UserBannerPr
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    router.push('/auth/login')
+    router.push('/')
     console.log('Cerrar sesión');
   };
 
@@ -33,14 +33,13 @@ export default function UserBanner({userProfilePic, sidebarWidth }: UserBannerPr
     <Box display="flex" alignItems="center" justifyContent="space-between" p={2} bgcolor="white"
          style={{ marginLeft: sidebarWidth, transition: 'margin-left 0.3s', width: '100%' , height: '65px',borderBottom: '1px solid #E0E0E0'}}>
       <Box display="flex" alignItems="center" >
-      <div style={{ paddingLeft: '59px'}}>
+      <div className="pl-[59px]">
         <Image
           src="/logoBostonAzul.svg"
           alt="Logo Boston"
           width={180}
           height={50}
         />
-
       </div>
       </Box>
       <Box display="flex" alignItems="center">

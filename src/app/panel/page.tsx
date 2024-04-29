@@ -2,8 +2,8 @@
 
 
 import React, { useState } from 'react';
-import Sidebar from '../../components/sidebar';
-import UserBanner from '@/components/banner_usuario';
+import Sidebar from '../../components/Sidebar';
+import UserBanner from '@/components/BannerUsuario';
 import { usePathname } from 'next/navigation';
 
 export default function Panel() {

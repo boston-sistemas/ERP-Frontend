@@ -1,26 +1,21 @@
 import React from 'react';
 import { Box, FormControl, InputLabel, Select, MenuItem, IconButton, TextField, InputAdornment } from '@mui/material';
-import ArchiveIcon from '@mui/icons-material/Archive';
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import SearchIcon from '@mui/icons-material/Search';
 import { Delete } from '@mui/icons-material';
 
 
 interface WeekTissueSelectorProps {
-  selectedTissue: string;
-  setSelectedTissue: (tissue: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
 
-const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
-  selectedTissue,
-  setSelectedTissue,
+const Filtrador_Disponible: React.FC<WeekTissueSelectorProps> = ({
   searchQuery,
   setSearchQuery
 }) => {
 
   const handleReset = () => {
-    setSelectedTissue('tejeduria');
     setSearchQuery('');
   };
 
@@ -34,11 +29,11 @@ const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
       height: '130px', borderBottom: '1px solid #E0E0E0',
       maxWidth: 'calc(100%-10px)', 
       boxSizing: 'border-box', 
-      overflowX: 'auto', // Permite desplazamiento horizontal si el contenido es muy ancho
+      overflowX: 'auto', 
     }}
       >
       
-      <ArchiveIcon sx={{
+      <UnarchiveIcon sx={{
         color: "black", 
         fontSize: {
           xs: '3rem', // Aquí haces que el ícono desaparezca en pantallas extra pequeñas
@@ -51,25 +46,7 @@ const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
       }}/>
       
       <Box flexGrow={1} display="flex" justifyContent="flex-end" marginRight="15px">
-        <FormControl variant="outlined" style={{ width: '150px', height: '40px', marginLeft: '20px' }}>
-          <InputLabel style={{ backgroundColor: 'white', padding: '0 5px' }}>Tejeduría</InputLabel>
-          <Select
-            value={selectedTissue}
-            onChange={(e) => setSelectedTissue(e.target.value as string)}
-            label="Tejeduría"
-            style={{ 
-              height: '40px', 
-              backgroundColor: 'white',
-              fontSize: '16px',
-            }}
-          >
-            <MenuItem value={'Tricot Fine S.A.'}>Tricot Fine S.A.</MenuItem>
-            <MenuItem value={'Textil Defranco E.I.R.L.'}>Textil Defranco E.I.R.L</MenuItem>
-            <MenuItem value={'Textiles Roca E.I.R.L.'}>Textiles Roca E.I.R.L</MenuItem>
-            {/* Etc... */}
-          </Select>
-        </FormControl>
-       
+
        
         <TextField
           value={searchQuery}
@@ -116,4 +93,4 @@ const Filtrador_Pendiente: React.FC<WeekTissueSelectorProps> = ({
   );
 };
 
-export default Filtrador_Pendiente;
+export default Filtrador_Disponible;
