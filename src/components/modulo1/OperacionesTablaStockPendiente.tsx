@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Button, Typography } from '@mui/material';
+import {Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +20,7 @@ import { useMemo } from 'react';
 import { useState } from 'react'
 import OperacionesSubtablaStockPendiente from './subtablas/OperacionesSubtablaStockPendiente';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 interface TablaStockPendienteProps {
   TejeduriaSeleccionada: string;
@@ -34,8 +35,6 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
   const [openSubOrders, setOpenSubOrders] = React.useState<Record<string, boolean>>({});
 
   const handleClickOpen = () => setOpenDialog(true);
-
-  
   const handleClose = () => setOpenDialog(false);
 
   const getSelectedRows = () => {
@@ -90,7 +89,7 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
   event.stopPropagation();
   setOpenSubOrders(prev => ({
     ...prev,
-    [order]: !prev[order] // Cambiar el valor directamente sin depender del estado anterior
+    [order]: !prev[order] 
   }));
 };
   
@@ -238,9 +237,9 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
         </Table>
       </TableContainer>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-      <Button variant="outlined" color="info" sx={{ mt: 2, mb: 2, ml: 2}} onClick={() => setOpenDialog(true)} endIcon={<UnsubscribeIcon/>}>
+      <LoadingButton loading={false} variant="outlined" color="info" sx={{ mt: 2, mb: 2, ml: 2}} onClick={() => setOpenDialog(true)} endIcon={<UnsubscribeIcon/>}>
         Cerrar
-      </Button>
+      </LoadingButton>
         <Box sx={{ flex: '1 1 auto' }}>
           <TablePagination
             rowsPerPageOptions={[10, 25, 50]}
