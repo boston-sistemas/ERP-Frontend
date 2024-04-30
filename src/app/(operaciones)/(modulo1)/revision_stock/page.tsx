@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../../../components/Sidebar';
 import UserBanner from '@/components/BannerUsuario';
 import { usePathname } from 'next/navigation';
-import Filtrador from '@/components/modulo1/OperacionesFiltroStockPendiente';
+import OperacionesFiltroStockPendiente from '@/components/modulo1/OperacionesFiltroStockPendiente';
 import Tabla_stock_pendiente from '@/components/modulo1/OperacionesTablaStockPendiente';
 import Tabla_stock_cerrado from '@/components/modulo1/OperacionesTablaStockCerrado';
 
@@ -15,18 +15,18 @@ export default function Panel() {
 
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedTissue, setSelectedTissue] = useState<string>('tejeduria');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [TejeduriaSeleccionada, SetTejeduriaSeleccionada] = useState<string>('tejeduria');
+  const [OrdenBusqueda, SetOrdenBusqueda] = useState<string>('');
 
 
   return (
     <div className="flex flex-col min-h-screen bg-white relative width: 100%">
       <UserBanner userProfilePic={'userCat.jpg'} pageName={''}/>
-      <Filtrador
-        selectedTissue={selectedTissue}
-        setSelectedTissue={setSelectedTissue}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+      <OperacionesFiltroStockPendiente
+        TejeduriaSeleccionada={TejeduriaSeleccionada}
+        SetTejeduriaSeleccionada={SetTejeduriaSeleccionada}
+        OrdenBusqueda={OrdenBusqueda}
+        SetOrdenBusqueda={SetOrdenBusqueda}
 
       />
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activePage={pathname} />
@@ -52,8 +52,8 @@ export default function Panel() {
       */}
 
       <Tabla_stock_pendiente
-        selectedTissue={selectedTissue}
-        searchQuery={searchQuery}
+        TejeduriaSeleccionada={TejeduriaSeleccionada}
+        OrdenBusqueda={OrdenBusqueda}
       />
       
       {/*
@@ -63,10 +63,10 @@ export default function Panel() {
       */}
       {/*  
       <Filtrador
-        selectedTissue={selectedTissue2}
-        setSelectedTissue={setSelectedTissue2}
-        searchQuery={searchQuery2}
-        setSearchQuery={setSearchQuery2}
+        TejeduriaSeleccionada={TejeduriaSeleccionada2}
+        SetTejeduriaSeleccionada={SetTejeduriaSeleccionada2}
+        OrdenBusqueda={OrdenBusqueda2}
+        SetOrdenBusqueda={SetOrdenBusqueda2}
       />*/}
 
       <Tabla_stock_cerrado/>

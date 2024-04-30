@@ -19,14 +19,14 @@ import { rows, columns} from './data/data_pendiente';
 import Collapse from '@mui/material/Collapse';
 import { useMemo } from 'react';
 import { useState } from 'react'
-
+import OperacionesSubtablaStockPendiente from './subtablas/OperacionesSubtablaStockPendiente';
 
 interface TablaStockPendienteProps {
-  selectedTissue: string;
-  searchQuery: string;
+  TejeduriaSeleccionada: string;
+  OrdenBusqueda: string;
 }
 
-export default function Tabla_stock_pendiente({ selectedTissue, searchQuery }: TablaStockPendienteProps) {
+export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusqueda }: TablaStockPendienteProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
@@ -111,11 +111,11 @@ export default function Tabla_stock_pendiente({ selectedTissue, searchQuery }: T
 
   const filteredRows = useMemo(() => {
     return rows.filter(row =>
-      (selectedTissue === 'tejeduria' && searchQuery === '') ||  // Mostrar todo si está en el valor por defecto y no hay búsqueda
-      (selectedTissue !== 'tejedurIa' && row.textile === selectedTissue) &&  // Filtrar por tejeduría si no está en el valor por defecto
-      (searchQuery === '' || row.order.toLowerCase().includes(searchQuery.toLowerCase()))  // Filtrar por orden si hay búsqueda
+      (TejeduriaSeleccionada === 'tejeduria' && OrdenBusqueda === '') ||  // Mostrar todo si está en el valor por defecto y no hay búsqueda
+      (TejeduriaSeleccionada !== 'tejedurIa' && row.textile === TejeduriaSeleccionada) &&  // Filtrar por tejeduría si no está en el valor por defecto
+      (OrdenBusqueda === '' || row.order.toLowerCase().includes(OrdenBusqueda.toLowerCase()))  // Filtrar por orden si hay búsqueda
     );
-  }, [selectedTissue, searchQuery]);
+  }, [TejeduriaSeleccionada, OrdenBusqueda]);
 
 
   return (
