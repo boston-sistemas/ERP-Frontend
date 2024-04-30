@@ -16,10 +16,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AlertaCerradoStock from './OperacionesAlertaCerradoStock';
 import { rows, columns} from './data/data_pendiente';
-import Collapse from '@mui/material/Collapse';
 import { useMemo } from 'react';
 import { useState } from 'react'
 import OperacionesSubtablaStockPendiente from './subtablas/OperacionesSubtablaStockPendiente';
+import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 
 interface TablaStockPendienteProps {
   TejeduriaSeleccionada: string;
@@ -111,9 +111,9 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
 
   const filteredRows = useMemo(() => {
     return rows.filter(row =>
-      (TejeduriaSeleccionada === 'tejeduria' && OrdenBusqueda === '') ||  // Mostrar todo si está en el valor por defecto y no hay búsqueda
-      (TejeduriaSeleccionada !== 'tejedurIa' && row.textile === TejeduriaSeleccionada) &&  // Filtrar por tejeduría si no está en el valor por defecto
-      (OrdenBusqueda === '' || row.order.toLowerCase().includes(OrdenBusqueda.toLowerCase()))  // Filtrar por orden si hay búsqueda
+      (TejeduriaSeleccionada === 'tejeduria' && OrdenBusqueda === '') ||  
+      (TejeduriaSeleccionada !== 'tejedurIa' && row.textile === TejeduriaSeleccionada) &&  
+      (OrdenBusqueda === '' || row.order.toLowerCase().includes(OrdenBusqueda.toLowerCase())) 
     );
   }, [TejeduriaSeleccionada, OrdenBusqueda]);
 
@@ -181,16 +181,11 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
                     selected={!!selected[row.order]}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={!!selected[row.order]}
-                      />
+                      <Checkbox color="primary" checked={!!selected[row.order]}/>
                     </TableCell>
                     <TableCell align="center" component="th" scope="row">
                       {row.order}
-                      <IconButton
-                        aria-label="expand row"
-                        size="small"
+                      <IconButton aria-label="expand row" size="small"
                         onClick={(event) => {
                           event.stopPropagation();
                           handleToggleSubOrder(event, row.order);
@@ -223,54 +218,12 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}>
-                      <Collapse in={!!openSubOrders[row.order]} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
-                        <Box margin={1}>
-                          <Table size="small" aria-label="sub-orders">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell padding="checkbox"></TableCell>
-                                <TableCell align="center">Suborden</TableCell>
-                                <TableCell align="center">Programado (kg)</TableCell>
-                                <TableCell align="center">Consumido (kg)</TableCell>
-                                <TableCell align="center">Restante (kg)</TableCell>
-                                <TableCell align="center">Merma</TableCell>
-                                <TableCell align="center">Progreso</TableCell>
-                                <TableCell align="center">Estado</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {row.subOrders.map((subOrder, index) => (
-                                <TableRow key={index}>
-                                  <TableCell padding="checkbox"></TableCell>
-                                  <TableCell align="center">{subOrder.suborder}</TableCell>
-                                  <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{`${subOrder.waste.toFixed(2)} %`}</TableCell>
-                                  <TableCell align="center">
-                                    <Box display="flex" alignItems="center">
-                                      <Box width="100%" mr={1}>
-                                        <LinearProgress variant="determinate" value={subOrder.progress} />
-                                      </Box>
-                                      <Box minWidth={35}>
-                                        <Typography variant="body2" color="textSecondary">{`${subOrder.progress.toFixed(1)}%`}</Typography>
-                                      </Box>
-                                    </Box>
-                                  </TableCell>
-                                  <TableCell 
-                                    align="center" 
-                                    style={{ backgroundColor: getStateColor(subOrder.state), color: 'white' }}
-                                  >
-                                    {subOrder.state}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </Box>
-                      </Collapse>
-                    </TableCell>
+                  <OperacionesSubtablaStockPendiente
+                    open={!!openSubOrders[row.order]}
+                    subOrders={row.subOrders}
+                    getStateColor={getStateColor}
+                    totalColumns={columns.length + 1}
+                  />
                   </TableRow>
                 </React.Fragment>
               ))
@@ -285,9 +238,9 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
         </Table>
       </TableContainer>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>
-          Cerrar
-        </Button>
+      <Button variant="outlined" color="info" sx={{ mt: 2, mb: 2, ml: 2}} onClick={() => setOpenDialog(true)} endIcon={<UnsubscribeIcon/>}>
+        Cerrar
+      </Button>
         <Box sx={{ flex: '1 1 auto' }}>
           <TablePagination
             rowsPerPageOptions={[10, 25, 50]}

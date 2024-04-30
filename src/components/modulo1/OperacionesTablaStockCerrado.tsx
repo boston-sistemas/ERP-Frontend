@@ -17,7 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 
 
@@ -260,13 +260,9 @@ export default function Tabla_stock_pendiente() {
         alignItems: 'center',
         flexWrap: 'wrap', 
         }}>
-          <Button 
-            variant="contained"
-            className="mt-4 mb-4 ml-4 w-50 bg-red-700 text-white py-1 rounded hover:bg-red-500 transition duration-300 ease-in-out"
-            onClick={handleClickOpen}
-          >
-            Liquidar
-          </Button>
+        <Button variant="outlined" color="error" sx={{ mt: 2, mb: 2, ml: 2}} onClick={() => handleClickOpen()} endIcon={<HighlightOffIcon/>}>
+        Liquidar
+        </Button>
           <Box sx={{ flex: '1 1 auto' }}> 
           
             <TablePagination

@@ -18,11 +18,12 @@ interface Props {
   open: boolean;
   subOrders: SubOrder[];
   getStateColor: (state: string) => string;
+  totalColumns: number;
 }
 
-const OperacionesSubtablaStockPendiente: React.FC<Props> = ({ open, subOrders, getStateColor }) => {
+const OperacionesSubtablaStockPendiente: React.FC<Props> = ({ open, subOrders, getStateColor, totalColumns }) => {
   return (
-    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60 }} colSpan={6}>
+    <TableCell colSpan={totalColumns} style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60 }} >
       <Collapse in={open} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
         <Box margin={1}>
           <Table size="small" aria-label="sub-orders">
