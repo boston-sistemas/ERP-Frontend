@@ -11,7 +11,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LanguageIcon from '@mui/icons-material/Language';
-import axios from '../config/axiosConfig';
+import axios from '@/config/axiosConfig';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 

@@ -22,7 +22,7 @@ import TimerIcon from '@mui/icons-material/Timer';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import { Factory } from '@mui/icons-material';
 import Link from 'next/link';
-import { SidebardProps } from '../types/component-types';
+import { SidebardProps } from '@/types/component-types';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 
 const drawerWidth = 255;
