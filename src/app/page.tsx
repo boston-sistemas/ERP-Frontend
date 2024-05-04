@@ -29,6 +29,8 @@ export default function Login() {
       const response = await axios.post('/api/v1/usuarios/login', {
         username,
         password,
+      }, {
+          withCredentials: true
       });
       router.push('/panel'); 
     } catch (error: any) {
