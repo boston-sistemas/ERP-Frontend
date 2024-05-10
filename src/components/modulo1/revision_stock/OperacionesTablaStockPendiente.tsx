@@ -15,10 +15,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AlertaCerradoStock from './OperacionesAlertaCerradoStock';
-import { rows, columns} from './data/data_pendiente';
+import { rows, columns} from '../data/data_pendiente';
 import { useMemo } from 'react';
 import { useState } from 'react'
-import OperacionesSubtablaStockPendiente from './subtablas/OperacionesSubtablaStockPendiente';
+import OperacionesSubtablaStockPendiente from './OperacionesSubtablaStockPendiente';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
 import LoadingButton from '@mui/lab/LoadingButton';
 

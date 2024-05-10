@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 import Sidebar from '@/components/sideBar';
 import UserBanner from '@/components/BannerUsuario';
 import { usePathname } from 'next/navigation';
-import OperacionesFiltroStockPendiente from '@/components/modulo1/OperacionesFiltroStockPendiente';
-import Tabla_stock_pendiente from '@/components/modulo1/OperacionesTablaStockPendiente';
-import Tabla_stock_cerrado from '@/components/modulo1/OperacionesTablaStockCerrado';
+import OperacionesFiltroStockPendiente from '@/components/modulo1/revision_stock/OperacionesFiltroStockPendiente';
+import Tabla_stock_pendiente from '@/components/modulo1/revision_stock/OperacionesTablaStockPendiente';
+import Tabla_stock_cerrado from '@/components/modulo1/revision_stock/OperacionesTablaStockCerrado';
 
 
 

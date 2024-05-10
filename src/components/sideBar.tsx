@@ -18,7 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Image from 'next/image';
 import HomeIcon from '@mui/icons-material/Home';
-import TimerIcon from '@mui/icons-material/Timer';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import { Factory } from '@mui/icons-material';
 import Link from 'next/link';
@@ -86,7 +86,7 @@ export default function Sidebard({open,setOpen,activePage}: SidebardProps) {
     { text: 'Panel', icon: <HomeIcon />, href: '/panel' },
     { text: 'Resumen', icon: <Factory />, href: '/resumen_operaciones' },
     { text: 'Revisión de Stock', icon: <ArchiveIcon />, href: '/revision_stock' },
-    { text: 'Programación EPT', icon: <TimerIcon />, href: '/programacion_ept' },
+    { text: 'Programación EPT', icon: <AccessAlarmIcon />, href: '/programacion_ept' },
     { text: 'Reporte de Stock', icon: <UnarchiveIcon />, href: '/reporte_stock' },
   ];
 

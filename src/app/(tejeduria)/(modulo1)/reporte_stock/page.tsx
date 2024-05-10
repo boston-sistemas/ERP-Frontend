@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import Sidebar from '@/components/sideBar';
 import UserBanner from '@/components/BannerUsuario';
 import { usePathname } from 'next/navigation';
-import Tabla_stock_disponible from '@/components/modulo1/TejeduriaTablaStockDisponible';
-import Filtrador_Disponible from '@/components/modulo1/TejeduriaFiltroStockPendiente';
+import Tabla_stock_disponible from '@/components/modulo1/reporte_stock/TejeduriaTablaStockDisponible';
+import Filtrador_Disponible from '@/components/modulo1/reporte_stock/TejeduriaFiltroStockPendiente';
 
 
 
