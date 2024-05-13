@@ -27,7 +27,7 @@ const OperacionesFiltroTejeduriaTintoreria: React.FC<UltimoStockProps> = ({
       boxSizing: 'border-box',
       overflowX: 'auto'
     }}>
-      <AccessAlarmIcon sx={{ color: "black", fontSize: { xs: '3rem', sm: '4rem', md: '5rem', lg: '6rem'}, ml: 1 }}/>
+      <AccessAlarmIcon sx={{ color: "black", fontSize: { xs: '3rem', sm: '4rem', md: '5rem', lg: '6rem'}, ml: 2 }}/>
       <Box sx={{ display: 'flex', flexGrow: 1, mx: 2 }}>
         <FormControl variant="outlined" sx={{ width: 200, height: '40px', mr: 2 }}>
           <InputLabel id="tejeduria-label">Tejeduría</InputLabel>
@@ -50,7 +50,7 @@ const OperacionesFiltroTejeduriaTintoreria: React.FC<UltimoStockProps> = ({
             color: 'white',
             py: 1,
             px: 2,
-            minWidth: 230, 
+            minWidth: 200, 
             height: '35px',
             borderRadius: '4px',
             '&:hover': {
@@ -62,7 +62,7 @@ const OperacionesFiltroTejeduriaTintoreria: React.FC<UltimoStockProps> = ({
           }}
           className="bg-black text-white hover:bg-gray-700 transition duration-300 ease-in-out"
         >
-          Actualizar Stock
+          Obtener Stock
         </Button>
         <LocalShippingIcon sx={{ color: "black", fontSize: '2rem', ml: 8, flexGrow: 0 }}/>
         <FormControl variant="outlined" sx={{ width: 200, height: '40px', ml: 2}}>

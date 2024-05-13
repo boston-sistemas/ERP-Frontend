@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { rows, columns } from './data/data_disponible';
+import { rows, columns } from './data/data_stock';
 //import AlertaEnviarStock from './TejeduriaAlertaEnviarStock';
 
 
@@ -83,7 +83,7 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
   const handleSelectAllClick = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.reduce((acc, row) => {
-        acc[row.order] = true;
+        acc[row.id] = true;
         return acc;
       }, {} as Record<string, boolean>);
       setSelected(newSelected);
@@ -108,14 +108,14 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
   }[state] || 'none'), []);
 
   const filteredRows = useMemo(() => rows.filter(row =>
-    (searchQuery === '' || row.order.toLowerCase().includes(searchQuery.toLowerCase()))
+    (searchQuery === '' || row.suborden.toLowerCase().includes(searchQuery.toLowerCase()))
   ), [searchQuery]);
 
   const getSelectedRows = () => {
     return Object.keys(selected)
       .filter(key => selected[key])
       .flatMap(key => {
-        const row = rows.find(r => r.order === key);
+        const row = rows.find(r => r.id === key);
         if (row) {
           return row.subOrders.map(subOrder => ({
             id: subOrder.id,
@@ -189,57 +189,45 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
           <TableBody>
             {filteredRows.length > 0 ? (
               filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                <React.Fragment key={row.order}>
+                <React.Fragment key={row.id}>
                   <TableRow
                     hover
                     onClick={(event) => {
                       if (event.target instanceof HTMLElement && event.target.closest('.ignore-row-click')) {
                         return;
                       }
-                      const newSelected = { ...selected, [row.order]: !selected[row.order] };
-                      if (newSelected[row.order]) {
+                      const newSelected = { ...selected, [row.id]: !selected[row.id] };
+                      if (newSelected[row.id]) {
                         setSelected(newSelected);
                       } else {
                         const remainingSelected = { ...newSelected };
-                        delete remainingSelected[row.order];
+                        delete remainingSelected[row.id];
                         setSelected(remainingSelected);
                       }
                     }}
                     role="checkbox"
-                    aria-checked={!!selected[row.order]}
+                    aria-checked={!!selected[row.id]}
                     tabIndex={-1}
-                    selected={!!selected[row.order]}
+                    selected={!!selected[row.id]}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox color="primary" checked={!!selected[row.order]} />
+                      <Checkbox color="primary" checked={!!selected[row.id]} />
                     </TableCell>
                     <TableCell align="center" component="th" scope="row">
-                      {row.order}
+                      {row.id}
                      
                     </TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.programmed.toLocaleString('en-US')}</TableCell>
-                    <TableCell align="center">{row.consumed.toLocaleString('en-US')}</TableCell>
-                    <TableCell align="center">{row.remaining.toLocaleString('en-US')}</TableCell>
-                    <TableCell align="center">{`${row.waste.toFixed(2)} %`}</TableCell>
-                    <TableCell align="center">
-                      <Box display="flex" alignItems="center">
-                        <Box width="100%" mr={1}>
-                          <LinearProgress variant="determinate" value={row.progress} />
-                        </Box>
-                        <Box minWidth={35}>
-                          <Typography variant="body2" color="textSecondary">{`${Math.round(row.progress)}%`}</Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
+      
+                    <TableCell align="center">{row.fibra}</TableCell>
+                    <TableCell align="center">{row.rollos.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.restante.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.pesoOrden.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.restanteTejeduria.toLocaleString('en-US')}</TableCell>
                     <TableCell 
                       align="center" 
-                      style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
-                      aria-controls="simple-menu" 
-                      aria-haspopup="true" 
-                      
+                      style={{ backgroundColor: getStateColor(row.estado), color: 'white' }}
                     >
-                      {row.state}
+                      {row.estado}
                     </TableCell>
                   </TableRow>
                 </React.Fragment>
