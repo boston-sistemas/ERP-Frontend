@@ -25,9 +25,9 @@ interface SubOrden {
 export default function Programacion_ept() {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [tejeduriaSeleccionada, setTejeduriaSeleccionada] = useState<string>('Tejeduría Inicial');
-  const [tintoreriaSeleccionada, setTintoreriaSeleccionada] = useState<string>('Tintoreria Inicial');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [tejeduriaSeleccionada, setTejeduriaSeleccionada] = useState<string>(' ');
+  const [tintoreriaSeleccionada, setTintoreriaSeleccionada] = useState<string>(' ');
+  const [searchQuery, setSearchQuery] = useState<string>(' ');
   const [partidas, setPartidas] = useState<SubOrden[]>([]);
 
   const handleAddPartida = (selectedRows: SubOrden[]) => {
@@ -62,6 +62,12 @@ export default function Programacion_ept() {
     );
   };
 
+  const handleResetFilters = () => {
+    setTejeduriaSeleccionada(' ');
+    setTintoreriaSeleccionada(' ');
+    setSearchQuery(' ');
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-white relative" style={{ width: '100%' }}>
       <UserBanner userProfilePic={'userCat.jpg'} pageName={''} />
@@ -78,6 +84,7 @@ export default function Programacion_ept() {
         onAddPartida={handleAddPartida}
         onUpdateRollos={handleRollosChange}
         partidas={partidas}
+        tintoreriaSeleccionada={tintoreriaSeleccionada}
       />
 
       <OperacionesTablaPartida

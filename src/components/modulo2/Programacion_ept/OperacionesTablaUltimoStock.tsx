@@ -19,15 +19,17 @@ interface SubOrden {
 interface TalbaUltimoStockProps {
   searchQuery: string;
   onAddPartida: (selectedRows: SubOrden[]) => void;
+  tintoreriaSeleccionada: string;
   onUpdateRollos: (id: string, newRollos: number) => void;
   partidas: SubOrden[];
 }
 
-export default function OperacionesTablaUltimoStock({ searchQuery, onAddPartida, onUpdateRollos, partidas }: TalbaUltimoStockProps) {
+export default function OperacionesTablaUltimoStock({ searchQuery, onAddPartida, tintoreriaSeleccionada, onUpdateRollos, partidas }: TalbaUltimoStockProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [rows, setRows] = useState(initialRows);
+  const [tintoreriaError, setTintoreriaError] = useState(false);
 
   const stateLabels = {
     'Listo': 'Listo',
@@ -67,10 +69,17 @@ export default function OperacionesTablaUltimoStock({ searchQuery, onAddPartida,
   }[state] || 'none'), []);
 
   const filteredRows = useMemo(() => rows.filter(row =>
-    searchQuery === '' || row.suborden.toLowerCase().includes(searchQuery.toLowerCase())
+    searchQuery.trim() === '' || row.suborden.toLowerCase().includes(searchQuery.toLowerCase())
   ), [searchQuery, rows]);
 
   const handleAddPartida = () => {
+    if (!tintoreriaSeleccionada.trim()) {
+      setTintoreriaError(true);
+      return;
+    }
+
+    setTintoreriaError(false);
+
     const nextPartidaNumber = partidas.length > 0 ? Math.max(...partidas.map(p => p.partida)) + 1 : 1;
     const selectedRows = Object.keys(selected)
       .filter(key => selected[key])
@@ -86,11 +95,13 @@ export default function OperacionesTablaUltimoStock({ searchQuery, onAddPartida,
           peso_por_rollo: row?.pesoOrden / row?.rollos ?? 0,
           rollos: 0,
           peso: 0,
-          tintoreria: 'N/A',
+          tintoreria: tintoreriaSeleccionada,
           color: 'N/A'
         };
       });
+
     onAddPartida(selectedRows);
+    setSelected({});
   };
 
   return (
@@ -170,6 +181,11 @@ export default function OperacionesTablaUltimoStock({ searchQuery, onAddPartida,
         <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={handleAddPartida}>
           Agregar Partida
         </Button>
+        {tintoreriaError && (
+          <Typography color="error" sx={{ mt: 2, mb: 2, ml: 2 }}>
+            El campo Tintorería es requerido
+          </Typography>
+        )}
         <TablePagination
           rowsPerPageOptions={[10, 25, 50]}
           component="div"

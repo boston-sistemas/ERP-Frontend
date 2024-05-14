@@ -71,7 +71,7 @@ const OperacionesTablaPartida: React.FC<OperacionesTablaPartidaProps> = ({ parti
                       value={partida.rollos}
                       onChange={(e) => onRollosChange(partida.id, parseInt(e.target.value, 10))}
                       inputProps={{ min: 0 }}
-                      sx={{ width: '80px' }}
+                      sx={{ width: '100px' }}
                     />
                   </TableCell>
                   <TableCell align="center">{partida.rollos * partida.peso_por_rollo}</TableCell>
