@@ -1,35 +1,33 @@
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Button, Checkbox, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Toolbar } from '@mui/material';
+import { rows as initialRows, columns } from './data/data_stock';
 
-import React, { useCallback, useMemo, useState} from 'react';
-import { 
-    Box, Button, Checkbox, Collapse, IconButton, LinearProgress, 
-    Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, 
-    TableHead, TablePagination, TableRow, TextField, Typography, Toolbar
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { rows, columns } from './data/data_stock';
-//import AlertaEnviarStock from './TejeduriaAlertaEnviarStock';
-
-
+interface SubOrden {
+  id: string;
+  hilanderia: string;
+  suborden: string;
+  ancho: string;
+  partida: number;
+  restante: number;
+  rollos: number;
+  peso: number;
+  tintoreria: string;
+  color: string;
+  peso_por_rollo: number;
+}
 
 interface TalbaUltimoStockProps {
   searchQuery: string;
+  onAddPartida: (selectedRows: SubOrden[]) => void;
+  onUpdateRollos: (id: string, newRollos: number) => void;
+  partidas: SubOrden[];
 }
 
-interface RollAndWeightInputs {
-  [suborderId: string]: number;
-}
-
-export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimoStockProps) {
-  // Estados de UI
+export default function OperacionesTablaUltimoStock({ searchQuery, onAddPartida, onUpdateRollos, partidas }: TalbaUltimoStockProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
-  const [openDialog, setOpenDialog] = useState(false);
-  const [openSubOrders, setOpenSubOrders] = useState<Record<string, boolean>>({});
-  const [menuDirectionUp, setMenuDirectionUp] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const [rows, setRows] = useState(initialRows);
 
   const stateLabels = {
     'Listo': 'Listo',
@@ -38,48 +36,6 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
     '-': '-'
   };
 
-  const [rollInputs, setRollInputs] = useState<RollAndWeightInputs>({});
-  const [weightInputs, setWeightInputs] = useState<RollAndWeightInputs>({});
-
-
-  const handleRollChange = useCallback((suborderId: string, value: string) => {
-    const numericValue = value ? parseInt(value, 10) : 0;
-    setRollInputs(prev => ({ ...prev, [suborderId]: numericValue }));
-  }, []);
-
-  const handleWeightChange = useCallback((suborderId: string, value: string) => {
-    const numericValue = value ? parseInt(value, 10) : 0;
-    setWeightInputs(prev => ({ ...prev, [suborderId]: numericValue }));
-  }, []);
-
-  // Manejo de menú
-  const handleMenuEnter = useCallback((node: HTMLElement) => {
-    if (anchorEl && node) {
-      const rect = anchorEl.getBoundingClientRect();
-      if (rect) {
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
-        const estimatedMenuHeight = node.clientHeight;
-        setMenuDirectionUp(spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow);
-      }
-    }
-  }, [anchorEl]);
-
-  const handleClickStateMenu = useCallback((event: React.MouseEvent<HTMLElement>, order: string) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-  }, []);
-
-
-  const handleClose = () => {
-    setOpenDialog(false); 
-  };
-
-  const handleCloseStateMenu = useCallback(() => {
-    setAnchorEl(null);
-  }, []);
-
-  // Handlers para selección
   const handleSelectAllClick = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = rows.reduce((acc, row) => {
@@ -90,15 +46,18 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
     } else {
       setSelected({});
     }
-  }, []);
+  }, [rows]);
 
-  const handleToggleSubOrder = useCallback((event: React.MouseEvent<HTMLButtonElement>, order: string) => {
-    event.stopPropagation();
-    setOpenSubOrders(prev => ({
-      ...prev,
-      [order]: !prev[order]
-    }));
-  }, []);
+  const handleClick = (id: string) => {
+    const newSelected = { ...selected, [id]: !selected[id] };
+    if (newSelected[id]) {
+      setSelected(newSelected);
+    } else {
+      const remainingSelected = { ...newSelected };
+      delete remainingSelected[id];
+      setSelected(remainingSelected);
+    }
+  };
 
   const getStateColor = useCallback((state: string) => ({
     '-': '#9C9DA1',
@@ -108,55 +67,40 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
   }[state] || 'none'), []);
 
   const filteredRows = useMemo(() => rows.filter(row =>
-    (searchQuery === '' || row.suborden.toLowerCase().includes(searchQuery.toLowerCase()))
-  ), [searchQuery]);
+    searchQuery === '' || row.suborden.toLowerCase().includes(searchQuery.toLowerCase())
+  ), [searchQuery, rows]);
 
-  const getSelectedRows = () => {
-    return Object.keys(selected)
+  const handleAddPartida = () => {
+    const nextPartidaNumber = partidas.length > 0 ? Math.max(...partidas.map(p => p.partida)) + 1 : 1;
+    const selectedRows = Object.keys(selected)
       .filter(key => selected[key])
-      .flatMap(key => {
+      .map(key => {
         const row = rows.find(r => r.id === key);
-        if (row) {
-          return row.subOrders.map(subOrder => ({
-            id: subOrder.id,
-            order: row.order,
-            textile: row.textile,
-            consumed: subOrder.consumed,
-            programmed: subOrder.programmed,
-            progress: subOrder.progress,
-            suborder: subOrder.suborder,
-            ancho: subOrder.ancho,
-            remaining: subOrder.remaining,
-            rolls: rollInputs[subOrder.id] || 0,
-            weight: weightInputs[subOrder.id] || 0
-          }));
-        }
-        return [];
+        return {
+          id: `${row?.id}-${nextPartidaNumber}`,  // ID único
+          hilanderia: row?.hilanderia ?? '',
+          suborden: row?.suborden ?? '',
+          ancho: row?.ancho ?? '',
+          partida: nextPartidaNumber,
+          restante: row?.restante ?? 0,
+          peso_por_rollo: row?.pesoOrden / row?.rollos ?? 0,
+          rollos: 0,
+          peso: 0,
+          tintoreria: 'N/A',
+          color: 'N/A'
+        };
       });
+    onAddPartida(selectedRows);
   };
 
   return (
-    <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '90px' }}>
-      <Toolbar
-        sx={{
-          pl: { sm: 2 },
-          pr: { xs: 1, sm: 1 },
-          backgroundColor: 'white'
-        }}
-      >
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="button"
-          id="tableTitle"
-          component="div"
-          color="black"
-        >
-          Reporte de Stock #__ enviado el __/__/__
+    <Paper sx={{ width: 'calc(100% - 130px)', overflow: 'hidden', marginLeft: '95px', marginTop: '20px', marginBottom: '40px' }}>
+      <Toolbar sx={{ pl: { sm: 2 }, pr: { xs: 1, sm: 1 }, backgroundColor: 'white' }}>
+        <Typography sx={{ flex: '1 1 100%' }} variant="body1" id="tableTitle" component="div" color="black">
+          REPORTE DE STOCK #__ ENVIADO EL __/__/__
         </Typography>
       </Toolbar>
       <TableContainer sx={{ maxHeight: 601 }}>
-
-        {/* Tabla Principal */}
         <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
@@ -175,11 +119,7 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
                 />
               </TableCell>
               {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align="center"
-                  style={{ backgroundColor: 'rgb(20, 67, 131)', color: 'white', minWidth: column.minWidth }}
-                >
+                <TableCell key={column.id} align="center" style={{ backgroundColor: 'rgb(20, 67, 131)', color: 'white', minWidth: column.minWidth }}>
                   {column.label}
                 </TableCell>
               ))}
@@ -192,19 +132,7 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
                 <React.Fragment key={row.id}>
                   <TableRow
                     hover
-                    onClick={(event) => {
-                      if (event.target instanceof HTMLElement && event.target.closest('.ignore-row-click')) {
-                        return;
-                      }
-                      const newSelected = { ...selected, [row.id]: !selected[row.id] };
-                      if (newSelected[row.id]) {
-                        setSelected(newSelected);
-                      } else {
-                        const remainingSelected = { ...newSelected };
-                        delete remainingSelected[row.id];
-                        setSelected(remainingSelected);
-                      }
-                    }}
+                    onClick={() => handleClick(row.id)}
                     role="checkbox"
                     aria-checked={!!selected[row.id]}
                     tabIndex={-1}
@@ -215,18 +143,13 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
                     </TableCell>
                     <TableCell align="center" component="th" scope="row">
                       {row.id}
-                     
                     </TableCell>
-      
                     <TableCell align="center">{row.fibra}</TableCell>
                     <TableCell align="center">{row.rollos.toLocaleString('en-US')}</TableCell>
                     <TableCell align="center">{row.restante.toLocaleString('en-US')}</TableCell>
                     <TableCell align="center">{row.pesoOrden.toLocaleString('en-US')}</TableCell>
                     <TableCell align="center">{row.restanteTejeduria.toLocaleString('en-US')}</TableCell>
-                    <TableCell 
-                      align="center" 
-                      style={{ backgroundColor: getStateColor(row.estado), color: 'white' }}
-                    >
+                    <TableCell align="center" style={{ backgroundColor: getStateColor(row.estado), color: 'white' }}>
                       {row.estado}
                     </TableCell>
                   </TableRow>
@@ -234,7 +157,7 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} align="center">
+                <TableCell colSpan={columns.length + 1} align="center">
                   No existen datos para esta consulta
                 </TableCell>
               </TableRow>
@@ -243,79 +166,8 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
         </Table>
       </TableContainer>
 
-      {/* Menú de Estados */}
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleCloseStateMenu}
-        TransitionProps={{ onEntering: handleMenuEnter }}
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: 'white',
-            overflow: 'visible',
-            filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
-            mt: menuDirectionUp ? null : '8px',
-            mb: menuDirectionUp ? '8px' : null,
-            '&::before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: menuDirectionUp ? '242px' : '-6px',
-              bottom: menuDirectionUp ? 'calc(100% - 7px)' : null,
-              left: '50%',
-              transform: menuDirectionUp ? 'translateX(-50%) rotate(225deg)' : 'translateX(-50%) rotate(45deg)',
-              width: '13px',
-              height: '13px',
-              bgcolor: 'white',
-              zIndex: 1,
-            },
-          },
-          '& .MuiList-root': {
-            padding: '4px 8px',
-            bgcolor: 'background.paper',
-            borderRadius: '4px',
-            boxShadow: 'none',
-            width: '10rem'
-          },
-        }}
-        anchorOrigin={{
-          vertical: menuDirectionUp ? 'top' : 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: menuDirectionUp ? 'bottom' : 'top',
-          horizontal: 'center',
-        }}
-      >
-        {Object.entries(stateLabels).map(([stateValue, stateLabel]) => (
-          <MenuItem
-            key={stateValue}
-            onClick={() => {
-              handleCloseStateMenu();
-            }}
-            sx={{
-              justifyContent: 'center',
-              backgroundColor: getStateColor(stateValue), 
-              color: 'white',
-              '&:hover': {
-                backgroundColor: getStateColor(stateValue), 
-              },
-              textAlign: 'center', 
-              width: '100%', 
-              padding: '15px',
-              margin: '5px 0px',
-            }}
-          >
-            {stateLabel}
-          </MenuItem>
-        ))}
-      </Menu>
-
-      {/* Controles de Paginación y Acciones */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={() => setOpenDialog(true)}>
+        <Button variant="contained" className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out" onClick={handleAddPartida}>
           Agregar Partida
         </Button>
         <TablePagination
@@ -334,11 +186,6 @@ export default function OperacionesTablaUltimoStock({ searchQuery }: TalbaUltimo
           labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}
         />
       </Box>
-
-      {/* Alerta de Envío de Stock 
-      
-      <AlertaEnviarStock open={openDialog} onClose={handleClose} selectedRows={getSelectedRows()} />
-*/}
     </Paper>
   );
 }

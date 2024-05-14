@@ -121,8 +121,8 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
             id: subOrder.id,
             order: row.order,
             textile: row.textile,
-            consumed: subOrder.consumed,
-            programmed: subOrder.programmed,
+            consumed: subOrder.consumido,
+            programmed: subOrder.programado,
             progress: subOrder.progress,
             suborder: subOrder.suborder,
             ancho: subOrder.ancho,
@@ -210,8 +210,8 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
                       </IconButton>
                     </TableCell>
                     <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.programmed.toLocaleString('en-US')}</TableCell>
-                    <TableCell align="center">{row.consumed.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.programado.toLocaleString('en-US')}</TableCell>
+                    <TableCell align="center">{row.consumido.toLocaleString('en-US')}</TableCell>
                     <TableCell align="center">{row.remaining.toLocaleString('en-US')}</TableCell>
                     <TableCell align="center">{`${row.waste.toFixed(2)} %`}</TableCell>
                     <TableCell align="center">
@@ -262,8 +262,8 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
                                   <TableCell align="center">{subOrder.suborder}</TableCell>
                                   <TableCell align="center">{subOrder.ancho}</TableCell>
                                   <TableCell align="center">{subOrder.hilanderia}</TableCell>
-                                  <TableCell align="center">{subOrder.programmed.toLocaleString('en-US')}</TableCell>
-                                  <TableCell align="center">{subOrder.consumed.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{subOrder.programado.toLocaleString('en-US')}</TableCell>
+                                  <TableCell align="center">{subOrder.consumido.toLocaleString('en-US')}</TableCell>
                                   <TableCell align="center">{subOrder.remaining.toLocaleString('en-US')}</TableCell>
                                   <TableCell align="center">
                                     <TextField

@@ -1,12 +1,14 @@
 export interface SubOrden {
   id: string;
-  suborden: string;  // Suborden
-  fibra: string;     // Fibra
-  rollos: number;    // Rollos
-  restante: number;  // Restante (kg)
+  suborden: string; 
+  fibra: string;
+  ancho: string,
+  hilanderia:string,     
+  rollos: number;   
+  restante: number; 
   pesoOrden: number;
-  restanteTejeduria: number;  // Restante Tejeduría (kg)
-  estado: string;    // Estado
+  restanteTejeduria: number;  
+  estado: string;    
 }
   
  
@@ -15,6 +17,8 @@ export function createSubOrden(
   subOrdenData: {
       suborden: string,
       fibra: string,
+      ancho: string,
+      hilanderia:string,
       rollos: number,
       restante: number,
       pesoOrden: number;
@@ -28,6 +32,8 @@ export function createSubOrden(
     id,
     suborden: subOrdenData.suborden,
     fibra: subOrdenData.fibra,
+    ancho: subOrdenData.ancho,
+    hilanderia: subOrdenData.hilanderia,
     rollos: subOrdenData.rollos,
     restante: subOrdenData.restante,
     pesoOrden: subOrdenData.pesoOrden,
@@ -55,10 +61,22 @@ export const columns: readonly Column[] = [
     
   
   export const rows = [
-    createSubOrden('TRI1607', {
-      suborden: 'JLL13590', fibra: 'Algodon', rollos: 22, restante: 22, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
+    createSubOrden('FRA1492', {
+      suborden: 'RBV165', fibra: 'Algodon', ancho:'39', hilanderia: 'Hilanderia 1', rollos: 22, restante: 22, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
     }),
-    createSubOrden('TRI1607', {
-      suborden: 'JLL13591', fibra: 'Algodon', rollos: 20, restante: 20, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
+    createSubOrden('FRA1492', {
+      suborden: 'RBV166', fibra: 'Algodon', ancho:'40', hilanderia: 'Hilanderia 1', rollos: 20, restante: 20, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
+    }),
+    createSubOrden('FRA1492', {
+      suborden: 'RBV167', fibra: 'Algodon', ancho:'39', hilanderia: 'Hilanderia 1', rollos: 22, restante: 22, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
+    }),
+    createSubOrden('FRA1492', {
+      suborden: 'RBV188', fibra: 'Algodon', ancho:'40', hilanderia: 'Hilanderia 1', rollos: 20, restante: 20, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
+    }),
+    createSubOrden('FRA1492', {
+      suborden: 'RBV169', fibra: 'Algodon', ancho:'39', hilanderia: 'Hilanderia 1', rollos: 22, restante: 22, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
+    }),
+    createSubOrden('FRA1492', {
+      suborden: 'RBV170', fibra: 'Algodon', ancho:'40', hilanderia: 'Hilanderia 1', rollos: 20, restante: 20, pesoOrden: 1000, restanteTejeduria: 1000, estado: 'Listo'
     }),
   ];

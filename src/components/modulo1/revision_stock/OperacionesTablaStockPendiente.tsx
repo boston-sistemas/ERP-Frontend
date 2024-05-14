@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import {Typography } from '@mui/material';
+import {Button, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -237,9 +237,13 @@ export default function Tabla_stock_pendiente({ TejeduriaSeleccionada, OrdenBusq
         </Table>
       </TableContainer>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-      <LoadingButton loading={false} variant="outlined" color="info" sx={{ mt: 2, mb: 2, ml: 2}} onClick={() => setOpenDialog(true)} endIcon={<UnsubscribeIcon/>}>
-        Cerrar
-      </LoadingButton>
+        <Button 
+          variant="contained"
+          className="mt-4 mb-4 ml-4 w-50 bg-black text-white py-1 rounded hover:bg-gray-700 transition duration-300 ease-in-out"
+          onClick={handleClickOpen}
+        >
+          CERRAR ORDEN
+        </Button>
         <Box sx={{ flex: '1 1 auto' }}>
           <TablePagination
             rowsPerPageOptions={[10, 25, 50]}
