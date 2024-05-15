@@ -2,7 +2,7 @@
 
 
 import React, { useState } from 'react';
-import Sidebar from '@/components/sideBar';
+import Sidebar from '@/components/Sidebar';
 import UserBanner from '@/components/BannerUsuario';
 import { usePathname } from 'next/navigation';
 
