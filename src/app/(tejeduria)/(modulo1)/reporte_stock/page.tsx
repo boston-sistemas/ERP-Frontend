@@ -18,12 +18,8 @@ export default function Panel() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white relative width: 100%">
-      <UserBanner userProfilePic={'userCat.jpg'} pageName={''}/>
-      <Filtrador_Disponible
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-
-      />
+      <UserBanner userProfilePic={'userCat.jpg'} pageName={''} />
+      
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activePage={pathname} />
       {sidebarOpen && (
         <div
@@ -34,18 +30,21 @@ export default function Panel() {
             width: '100%',
             height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo gris semitransparente
-            zIndex: 100, 
+            zIndex: 100,
           }}
-          onClick={() => setSidebarOpen(false)} 
+          onClick={() => setSidebarOpen(false)}
         />
       )}
-      <div className={sidebarOpen ? "content-overlay" : ""}>
-
-      <Tabla_stock_disponible
+      <Filtrador_Disponible
         searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
+      <div className={sidebarOpen ? "content-overlay" : ""}>
+        <Tabla_stock_disponible
+          searchQuery={searchQuery}
+        />
       </div>
-    
+
     </div>
   );
 }

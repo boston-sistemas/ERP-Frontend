@@ -1,9 +1,9 @@
 
-import React, { useCallback, useMemo, useState} from 'react';
-import { 
-    Box, Button, Checkbox, Collapse, IconButton, LinearProgress, 
-    Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, 
-    TableHead, TablePagination, TableRow, TextField, Typography
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  Box, Button, Checkbox, Collapse, IconButton, LinearProgress,
+  Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
+  TableHead, TablePagination, TableRow, TextField, Typography
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -72,7 +72,7 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
 
 
   const handleClose = () => {
-    setOpenDialog(false); 
+    setOpenDialog(false);
   };
 
   const handleCloseStateMenu = useCallback(() => {
@@ -224,12 +224,12 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell 
-                      align="center" 
+                    <TableCell
+                      align="center"
                       style={{ backgroundColor: getStateColor(row.state), color: 'white' }}
-                      aria-controls="simple-menu" 
-                      aria-haspopup="true" 
-                      
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+
                     >
                       {row.state}
                     </TableCell>
@@ -237,7 +237,7 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
 
                   {/* Tabla Colapsada */}
                   <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60}} colSpan={columns.length + 2}>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 60 }} colSpan={columns.length + 2}>
                       <Collapse in={!!openSubOrders[row.order]} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <Box margin={1}>
                           <Table size="small" aria-label="sub-orders">
@@ -287,10 +287,10 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
                                       style={{ width: '100px' }}
                                     />
                                   </TableCell>
-                                  <TableCell 
+                                  <TableCell
                                     onClick={(event) => handleClickStateMenu(event, row.order)}
-                                    sx={{ maxWidth: '100%' }}  
-                                    align="center" 
+                                    sx={{ maxWidth: '100%' }}
+                                    align="center"
                                     style={{ minWidth: '140px', backgroundColor: getStateColor(subOrder.state), color: 'white' }}
                                   >
                                     {subOrder.state}
@@ -370,13 +370,13 @@ export default function TablaStockDisponible({ searchQuery }: TablaStockPendient
             }}
             sx={{
               justifyContent: 'center',
-              backgroundColor: getStateColor(stateValue), 
+              backgroundColor: getStateColor(stateValue),
               color: 'white',
               '&:hover': {
-                backgroundColor: getStateColor(stateValue), 
+                backgroundColor: getStateColor(stateValue),
               },
-              textAlign: 'center', 
-              width: '100%', 
+              textAlign: 'center',
+              width: '100%',
               padding: '15px',
               margin: '5px 0px',
             }}

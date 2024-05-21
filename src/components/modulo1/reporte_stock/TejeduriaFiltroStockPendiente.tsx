@@ -20,44 +20,44 @@ const Filtrador_Disponible: React.FC<WeekTissueSelectorProps> = ({
   };
 
   return (
-    <Box 
-    display="flex" alignItems="center" p={2} bgcolor="white"
-    sx={{
-      marginLeft:'55px',
-      width: 'auto',
-      px: 2, 
-      height: '130px', borderBottom: '1px solid #E0E0E0',
-      maxWidth: 'calc(100%-10px)', 
-      boxSizing: 'border-box', 
-      overflowX: 'auto', 
-    }}
-      >
-      
+    <Box
+      display="flex" alignItems="center" p={2} bgcolor="white"
+      sx={{
+        marginLeft: '55px',
+        width: 'auto',
+        px: 2,
+        height: '130px', borderBottom: '1px solid #E0E0E0',
+        maxWidth: 'calc(100%-10px)',
+        boxSizing: 'border-box',
+        overflowX: 'auto',
+      }}
+    >
+
       <UnarchiveIcon sx={{
-        color: "black", 
+        color: "black",
         fontSize: {
           xs: '3rem', // Aquí haces que el ícono desaparezca en pantallas extra pequeñas
           sm: '4rem', // Tamaño más pequeño para pantallas pequeñas
           md: '5rem', // Tamaño mediano 
           lg: '6rem', // Tamaño más grande 
-        }, 
-        transition: 'font-size 0.5s ease', 
+        },
+        transition: 'font-size 0.5s ease',
         marginLeft: '13px'
-      }}/>
-      
+      }} />
+
       <Box flexGrow={1} display="flex" justifyContent="flex-end" marginRight="15px">
 
-       
+
         <TextField
           value={searchQuery}
-          
+
           onChange={(e) => setSearchQuery(e.target.value)}
           variant="outlined"
           placeholder="Orden"
-          style={{ 
-            backgroundColor: 'white', 
+          style={{
+            backgroundColor: 'white',
             padding: '0 15px',
-            width:"190px" ,
+            width: "190px",
           }}
           sx={{
             height: 40,
@@ -74,7 +74,7 @@ const Filtrador_Disponible: React.FC<WeekTissueSelectorProps> = ({
           }}
         />
 
-         {/* Botón para exportar a Google Sheets 
+        {/* Botón para exportar a Google Sheets 
          <IconButton>
           <Image
               src="/google-sheets-icon.png" 
@@ -84,9 +84,9 @@ const Filtrador_Disponible: React.FC<WeekTissueSelectorProps> = ({
             />
         </IconButton>
         */}
-        
+
         <IconButton onClick={handleReset}>
-          <Delete style={{color:"grey", fontSize: 25}}/>
+          <Delete style={{ color: "grey", fontSize: 25 }} />
         </IconButton>
       </Box>
     </Box>

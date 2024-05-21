@@ -12,7 +12,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LanguageIcon from '@mui/icons-material/Language';
 import axios from '@/config/axiosConfig';
-import LoadingButton from '@mui/lab/LoadingButton';
+
 
 
 export default function Login() {
@@ -21,7 +21,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  
+
 
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
@@ -30,9 +30,9 @@ export default function Login() {
         username,
         password,
       }, {
-          withCredentials: true
+        withCredentials: true
       });
-      router.push('/panel'); 
+      router.push('/panel');
     } catch (error: any) {
       console.error('Error de inicio de sesión:', error.response ? error.response.data : error.message);
       alert('Error al iniciar sesión: ' + (error.response ? error.response.data.detail : error.message));
@@ -44,11 +44,11 @@ export default function Login() {
     setShowPassword(!showPassword);
   };
 
-  
+
 
   return (
     <div className="flex flex-wrap min-h-screen">
-      {/* Parte izquierda con centrado vertical y horizontal */} 
+      {/* Parte izquierda con centrado vertical y horizontal */}
       <div className="md:w-1/2 w-full bg-blue-900 p-4 md:order-1 flex items-center justify-center">
         <div className="flex flex-col items-start max-w-md">
           {/* Logo */}

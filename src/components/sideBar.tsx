@@ -24,6 +24,7 @@ import { Factory } from '@mui/icons-material';
 import Link from 'next/link';
 import { SidebardProps } from '@/types/component-types';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 const drawerWidth = 255;
 
@@ -86,8 +87,9 @@ export default function Sidebard({open,setOpen,activePage}: SidebardProps) {
     { text: 'Panel', icon: <HomeIcon />, href: '/panel' },
     { text: 'Resumen', icon: <Factory />, href: '/resumen_operaciones' },
     { text: 'Revisión de Stock', icon: <ArchiveIcon />, href: '/revision_stock' },
-    { text: 'Programación EPT', icon: <AccessAlarmIcon />, href: '/programacion_ept' },
+    { text: 'Programacion Tintoreria', icon: <AccessAlarmIcon />, href: '/envio-de-programacion-a-tintoreria' },
     { text: 'Reporte de Stock', icon: <UnarchiveIcon />, href: '/reporte_stock' },
+    { text: 'Confirmación EPT', icon: <AssignmentTurnedInIcon/>, href: 'confirmacion-ept'},
   ];
 
   return (
