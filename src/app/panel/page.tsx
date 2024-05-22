@@ -37,7 +37,7 @@ export default function  Panel() {
       <div className={sidebarOpen ? "content-overlay" : ""}>
 
       <p className="pl-20 text-black mt-4 text-xl">
-            HOLA <span className="font-bold">PANEL</span> USUARIO AARON
+            HOLA <span className="font-bold">PANEL</span> USUARIO DIEGO
       </p>
       </div>
     </div>
